@@ -37,7 +37,7 @@ public class AuthService {
 
     // ───────────────────────────────────────────────────────────────────────
     // SIGNUP
-    // ✅ OTP generated and emailed BEFORE saving user — avoids orphaned records
+    // OTP generated and emailed BEFORE saving user — avoids orphaned records
     // ───────────────────────────────────────────────────────────────────────
     @Transactional
     public String signup(SignUpRequestDto dto) {
@@ -51,7 +51,7 @@ public class AuthService {
             throw new RuntimeException("This phone number is already registered with another account.");
         }
 
-        // ✅ Generate OTP first — if email send fails, we never persist the user
+        //  Generate OTP first — if email send fails, we never persist the user
         String otp = otpService.generateAndSaveOtp(dto.getUsername());
         emailService.sendOtp(dto.getUsername(), otp); // throws on failure → user not saved
 
@@ -92,7 +92,7 @@ public class AuthService {
     // ───────────────────────────────────────────────────────────────────────
     // RESEND OTP (60-second backend cooldown)
     // ───────────────────────────────────────────────────────────────────────
-    public String resendOtp(String email) { // ✅ removed unnecessary @Transactional
+    public String resendOtp(String email) {
 
         LocalDateTime allowed = resendCooldownMap.get(email);
         if (allowed != null && LocalDateTime.now().isBefore(allowed)) {
@@ -155,7 +155,7 @@ public class AuthService {
     // ───────────────────────────────────────────────────────────────────────
     // FORGOT PASSWORD
     // ───────────────────────────────────────────────────────────────────────
-    public String forgotPassword(String email) { // ✅ removed unnecessary @Transactional
+    public String forgotPassword(String email) {
 
         LocalDateTime allowed = resendCooldownMap.get(email + "_forgot");
         if (allowed != null && LocalDateTime.now().isBefore(allowed)) {
@@ -183,7 +183,7 @@ public class AuthService {
         userRepository.findByUsername(dto.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // ✅ Check passwords match BEFORE burning the OTP
+        //  Check passwords match BEFORE burning the OTP
         if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
             throw new RuntimeException("Passwords do not match");
         }

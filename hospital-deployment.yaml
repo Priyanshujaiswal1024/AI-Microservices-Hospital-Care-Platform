@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hospital-deployment
+  namespace: hospital
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: hospital-deployment
+
+  template:
+    metadata:
+      labels:
+        app: hospital-deployment
+
+    spec:
+      containers:
+        - name: hospital-deployment
+          image: hospital-management-backend-app:latest
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 8080
+
+          envFrom:
+            - secretRef:
+                name: hospital-secret
+            - configMapRef:
+                name: hospital-config
+
+          livenessProbe:
+            httpGet:
+              path: /api/v1/actuator/health
+              port: 8080
+
+            initialDelaySeconds: 120
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          readinessProbe:
+            httpGet:
+              path: /api/v1/actuator/health
+              port: 8080
+
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"

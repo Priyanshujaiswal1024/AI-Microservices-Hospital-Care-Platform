@@ -15,12 +15,12 @@ import java.io.IOException;
 
 @Slf4j
 @Component
-// ❌ @RequiredArgsConstructor hatao — @Lazy ke saath kaam nahi karta
+// @RequiredArgsConstructor hatao — @Lazy ke saath kaam nahi karta
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private final AuthService authService;
 
-    // ✅ Manual constructor with @Lazy
+
     public OAuth2SuccessHandler(@Lazy AuthService authService) {
         this.authService = authService;
     }
