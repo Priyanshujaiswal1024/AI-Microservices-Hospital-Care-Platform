@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Appointment Cancelled</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            -webkit-font-smoothing: antialiased;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .header {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            padding: 35px 40px;
+            text-align: center;
+        }
+        .header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .content {
+            padding: 40px;
+        }
+        .content p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #475569;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: #fff5f5;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #fee2e2;
+        }
+        .details-table td {
+            padding: 14px 18px;
+            font-size: 14px;
+            border-bottom: 1px solid #fee2e2;
+        }
+        .details-table tr:last-child td {
+            border-bottom: none;
+        }
+        .details-table td.label {
+            font-weight: 600;
+            color: #991b1b;
+            width: 160px;
+        }
+        .details-table td.value {
+            color: #7f1d1d;
+            font-weight: 500;
+        }
+        .status-badge {
+            display: inline-block;
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .footer {
+            background-color: #f8fafc;
+            padding: 24px 40px;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>Appointment Cancelled ❌</h1>
+        </div>
+        <div class="content">
+            <p>Dear <strong th:text="${patientName}">Patient</strong>,</p>
+            <p>This is to inform you that your scheduled appointment has been cancelled. Below are the cancelled booking details:</p>
+            
+            <table class="details-table">
+                <tr>
+                    <td class="label">Doctor</td>
+                    <td class="value" th:text="${doctorName}">Dr. Name</td>
+                </tr>
+                <tr>
+                    <td class="label">Date & Time</td>
+                    <td class="value" th:text="${appointmentTime}">Date</td>
+                </tr>
+                <tr>
+                    <td class="label">Status</td>
+                    <td class="value"><span class="status-badge">Cancelled</span></td>
+                </tr>
+            </table>
+
+            <p style="margin-top: 25px;">You can reschedule your appointment at any time by logging into the patient portal.</p>
+            <p>Regards,<br/><strong>City Care HMS Team</strong></p>
+        </div>
+        <div class="footer">
+            © 2026 City Care Hospital. All rights reserved.<br/>
+            123 Health Street, Delhi | Ph: +91-11-XXXX-XXXX
+        </div>
+    </div>
+</body>
+</html>

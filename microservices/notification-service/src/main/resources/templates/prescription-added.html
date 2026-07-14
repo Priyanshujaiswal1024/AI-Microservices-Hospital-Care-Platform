@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Prescription Added</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            -webkit-font-smoothing: antialiased;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .email-container {
+            max-width: 650px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .header {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            padding: 35px 40px;
+            text-align: center;
+        }
+        .header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .content {
+            padding: 40px;
+        }
+        .content p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #475569;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #f8fafc;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        .info-table td {
+            padding: 12px 16px;
+            font-size: 14px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .info-table tr:last-child td {
+            border-bottom: none;
+        }
+        .info-table td.label {
+            font-weight: 600;
+            color: #475569;
+            width: 130px;
+        }
+        .info-table td.value {
+            color: #0f172a;
+            font-weight: 500;
+        }
+        .med-header {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+        .med-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        .med-table th {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            text-align: left;
+            padding: 10px 14px;
+            font-size: 13px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .med-table td {
+            padding: 12px 14px;
+            font-size: 13.5px;
+            color: #0f172a;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .med-table tr:last-child td {
+            border-bottom: none;
+        }
+        .footer {
+            background-color: #f8fafc;
+            padding: 24px 40px;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>New Prescription Added 💊</h1>
+        </div>
+        <div class="content">
+            <p>Dear <strong th:text="${patientName}">Patient</strong>,</p>
+            <p>Your consulting doctor has issued a new prescription. Below is a summary of the clinical details:</p>
+            
+            <table class="info-table">
+                <tr>
+                    <td class="label">Doctor</td>
+                    <td class="value" th:text="${doctorName}">Dr. Name</td>
+                </tr>
+                <tr>
+                    <td class="label">Diagnosis</td>
+                    <td class="value" th:text="${diagnosis}">Diagnosis</td>
+                </tr>
+                <tr th:if="${notes != null && !notes.isEmpty()}">
+                    <td class="label">Notes</td>
+                    <td class="value" th:text="${notes}">Clinical notes...</td>
+                </tr>
+            </table>
+
+            <!-- Loop over medicines if list is populated -->
+            <div th:if="${medicines != null && !medicines.isEmpty()}">
+                <h3 class="med-header">Prescribed Medicines:</h3>
+                <table class="med-table">
+                    <thead>
+                        <tr>
+                            <th>Medicine Name</th>
+                            <th>Frequency</th>
+                            <th>Duration</th>
+                            <th>Qty</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="med : ${medicines}">
+                            <td style="font-weight: 600;" th:text="${med.medicineName}">Paracetamol</td>
+                            <td th:text="${med.frequency}">Twice daily</td>
+                            <td th:text="${med.durationDays} + ' days'">5 days</td>
+                            <td th:text="${med.quantity}">10</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p style="margin-top: 25px; font-weight: 500; color: #1e3a8a;">💡 Please follow the dosage and instructions carefully.</p>
+            <p>Regards,<br/><strong>City Care Clinical Team</strong></p>
+        </div>
+        <div class="footer">
+            © 2026 City Care Hospital. All rights reserved.<br/>
+            123 Health Street, Delhi | Ph: +91-11-XXXX-XXXX
+        </div>
+    </div>
+</body>
+</html>

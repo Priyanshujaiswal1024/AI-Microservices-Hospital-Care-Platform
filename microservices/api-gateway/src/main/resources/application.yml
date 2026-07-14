@@ -1,0 +1,118 @@
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "${FRONTEND_URL:https://hospital-management-system.vercel.app}"
+              - "http://localhost:5173"
+            allowedMethods: ["GET","POST","PUT","PATCH","DELETE","OPTIONS"]
+            allowedHeaders: ["*"]
+            allowCredentials: true
+
+      routes:
+        # ── Auth Service ────────────────────────────────────────────────────
+        - id: auth-service
+          uri: http://${AUTH_SERVICE_HOST:localhost}:8089
+          predicates:
+            - Path=/api/v1/auth/**, /oauth2/**, /login/oauth2/**
+          filters:
+            - StripPrefix=0
+
+        # ── Doctor Service ──────────────────────────────────────────────────
+        - id: doctor-service
+          uri: http://${DOCTOR_SERVICE_HOST:localhost}:8082
+          predicates:
+            - Path=/api/v1/doctors/**, /api/v1/departments/**, /public/**
+          filters:
+            - StripPrefix=0
+            - name: JwtAuthFilter
+
+        # ── Appointment Service ─────────────────────────────────────────────
+        - id: appointment-service
+          uri: http://${APPOINTMENT_SERVICE_HOST:localhost}:8083
+          predicates:
+            - Path=/api/v1/appointments/**
+          filters:
+            - StripPrefix=0
+            - name: JwtAuthFilter
+
+        # ── Patient Service ─────────────────────────────────────────────────
+        - id: patient-service
+          uri: http://${PATIENT_SERVICE_HOST:localhost}:8084
+          predicates:
+            - Path=/api/v1/patients/**
+          filters:
+            - StripPrefix=0
+            - name: JwtAuthFilter
+
+        # ── Billing Service ─────────────────────────────────────────────────
+        - id: billing-service
+          uri: http://${BILLING_SERVICE_HOST:localhost}:8085
+          predicates:
+            - Path=/api/v1/bills/**
+          filters:
+            - StripPrefix=0
+            - name: JwtAuthFilter
+
+        # ── Pharmacy Service ────────────────────────────────────────────────
+        - id: pharmacy-service
+          uri: http://${PHARMACY_SERVICE_HOST:localhost}:8086
+          predicates:
+            - Path=/api/v1/medicines/**
+          filters:
+            - StripPrefix=0
+            - name: JwtAuthFilter
+
+        # ── Clinical Service ────────────────────────────────────────────────
+        - id: clinical-service
+          uri: http://${CLINICAL_SERVICE_HOST:localhost}:8088
+          predicates:
+            - Path=/api/v1/prescriptions/**, /api/v1/medical-records/**
+          filters:
+            - StripPrefix=0
+            - name: JwtAuthFilter
+
+        # ── Admin Service ───────────────────────────────────────────────────
+        - id: admin-service
+          uri: http://${ADMIN_SERVICE_HOST:localhost}:8081
+          predicates:
+            - Path=/api/v1/admin/**
+          filters:
+            - StripPrefix=0
+            - name: JwtAuthFilter
+
+server:
+  port: 8000
+
+jwt:
+  secretKey: ${JWT_SECRET}
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    com.priyanshu.gateway: DEBUG
+
+# Eureka Client Registration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${EUREKA_USERNAME:admin}:${EUREKA_PASSWORD:admin}@${EUREKA_HOST:localhost}:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://${ZIPKIN_HOST:localhost}:9411/api/v2/spans

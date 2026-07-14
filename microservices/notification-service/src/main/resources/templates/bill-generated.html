@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Bill Generated</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            -webkit-font-smoothing: antialiased;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .header {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            padding: 35px 40px;
+            text-align: center;
+        }
+        .header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .content {
+            padding: 40px;
+        }
+        .content p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #475569;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        .invoice-box {
+            background: #fffbeb;
+            border: 1px solid #fef3c7;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 25px 0;
+        }
+        .invoice-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #78350f;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #fde68a;
+            padding-bottom: 8px;
+        }
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .invoice-table td {
+            padding: 8px 0;
+            font-size: 14px;
+            color: #475569;
+        }
+        .invoice-table tr.total td {
+            font-weight: 700;
+            font-size: 16px;
+            color: #78350f;
+            padding-top: 15px;
+            border-top: 1px solid #fde68a;
+        }
+        .invoice-table td.value {
+            text-align: right;
+            font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+            font-weight: 600;
+        }
+        .status-badge {
+            display: inline-block;
+            background: #fef3c7;
+            color: #d97706;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .footer {
+            background-color: #f8fafc;
+            padding: 24px 40px;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>New Invoice Generated 🧾</h1>
+        </div>
+        <div class="content">
+            <p>Dear <strong th:text="${patientName}">Patient</strong>,</p>
+            <p>An invoice has been generated for your recent consultation. Please find the transaction details below:</p>
+            
+            <div class="invoice-box">
+                <div class="invoice-title" th:text="'Invoice: ' + ${billId}">Invoice Code</div>
+                <table class="invoice-table">
+                    <tr>
+                        <td>Consulting Doctor</td>
+                        <td class="value" th:text="${doctorName}">Dr. Name</td>
+                    </tr>
+                    <tr>
+                        <td>Consultation Fee</td>
+                        <td class="value" th:text="'₹ ' + ${consultationFee}">0.0</td>
+                    </tr>
+                    <tr>
+                        <td>GST (18%)</td>
+                        <td class="value" th:text="'₹ ' + ${gstAmount}">0.0</td>
+                    </tr>
+                    <tr>
+                        <td>Payment Status</td>
+                        <td class="value"><span class="status-badge">Unpaid</span></td>
+                    </tr>
+                    <tr class="total">
+                        <td>Total Dues</td>
+                        <td class="value" th:text="'₹ ' + ${totalAmount}">0.0</td>
+                    </tr>
+                </table>
+            </div>
+
+            <p style="margin-top: 25px;">Please settle the invoice dues online or at the hospital billing counter prior to your next visit.</p>
+            <p>Regards,<br/><strong>City Care Billing Desk</strong></p>
+        </div>
+        <div class="footer">
+            © 2026 City Care Hospital. All rights reserved.<br/>
+            123 Health Street, Delhi | billing@citycarehospital.in
+        </div>
+    </div>
+</body>
+</html>

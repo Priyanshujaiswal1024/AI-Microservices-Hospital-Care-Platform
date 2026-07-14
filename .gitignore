@@ -1,0 +1,52 @@
+# =============================================================================
+#  Priyansh Care Hospital — .gitignore
+# =============================================================================
+
+# ── Environment / Secrets ─────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+*.env
+
+# ── Maven build output ────────────────────────────────────────────────────────
+**/target/
+**/*.jar
+**/*.war
+**/*.class
+
+# ── IntelliJ IDEA ─────────────────────────────────────────────────────────────
+.idea/
+**/*.iml
+**/*.iws
+**/*.ipr
+out/
+
+# ── VS Code ───────────────────────────────────────────────────────────────────
+.vscode/
+*.code-workspace
+
+# ── Node / Frontend ───────────────────────────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+frontend/.env.production
+
+# ── OS files ──────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── Docker secrets (never commit real values) ────────────────────────────────
+docker-compose.override.yml
+
+# ── Spring Boot DevTools ─────────────────────────────────────────────────────
+**/.mvn/wrapper/maven-wrapper.jar
+
+# ── Test reports ─────────────────────────────────────────────────────────────
+**/surefire-reports/
+**/failsafe-reports/
