@@ -38,7 +38,8 @@ public class WebSecurityConfig {
                                 "/oauth2/**",
                                 "/login/oauth2/**",
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**"
+                                "/v3/api-docs/**",
+                                "/error"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
