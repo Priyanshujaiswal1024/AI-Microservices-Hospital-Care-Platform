@@ -412,6 +412,7 @@ services:
       APPOINTMENT_SERVICE_HOST: appointment-service
       PATIENT_SERVICE_HOST: patient-service
       BILLING_SERVICE_HOST: billing-service
+      DOCTOR_SERVICE_HOST: doctor-service
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:-admin}:${EUREKA_PASSWORD:-admin}@eureka-server:8761/eureka/
       JDK_JAVA_OPTIONS: "-Xms128m -Xmx256m"
       GROQ_API_KEY: ${GROQ_API_KEY}

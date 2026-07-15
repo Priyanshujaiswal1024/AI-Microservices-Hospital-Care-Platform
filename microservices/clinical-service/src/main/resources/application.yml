@@ -47,9 +47,15 @@ patient:
 medicine:
   service:
     url: http://${PHARMACY_SERVICE_HOST:localhost}:8086
+pharmacy:
+  service:
+    url: http://${PHARMACY_SERVICE_HOST:localhost}:8086
 billing:
   service:
     url: http://${BILLING_SERVICE_HOST:localhost}:8085
+doctor:
+  service:
+    url: http://${DOCTOR_SERVICE_HOST:localhost}:8082
 
 logging:
   level:
