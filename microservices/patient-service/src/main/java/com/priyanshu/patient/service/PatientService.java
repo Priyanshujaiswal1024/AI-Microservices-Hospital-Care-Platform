@@ -122,6 +122,7 @@ public class PatientService {
         insurance.setProvider(dto.getProvider());
         insurance.setPolicyNumber(dto.getPolicyNumber());
         
+
         LocalDate expiry = dto.getExpiryDate() != null ? dto.getExpiryDate() : dto.getValidUntil();
         insurance.setValidUntil(expiry);
         insurance.setCoverageAmount(dto.getCoverageAmount());
