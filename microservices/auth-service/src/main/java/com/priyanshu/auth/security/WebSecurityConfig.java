@@ -42,6 +42,13 @@ public class WebSecurityConfig {
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
+                // ── API Exception Handling (Don't redirect to OAuth2 on error) ──
+                .exceptionHandling(ex -> ex
+                        .defaultAuthenticationEntryPointFor(
+                                (request, response, authException) -> response.sendError(401, "Unauthorized"),
+                                new org.springframework.security.web.util.matcher.AntPathRequestMatcher("/api/**")
+                        )
+                )
                 // ── Google OAuth2 Login ──────────────────────────────────────
                 .oauth2Login(oauth2 -> oauth2
                         .authorizationEndpoint(endpoint ->
