@@ -248,7 +248,7 @@ services:
       JWT_SECRETKEY: ${JWT_SECRET}
       SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:admin}:${EUREKA_PASSWORD:admin}@eureka-server:8761/eureka/
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:-admin}:${EUREKA_PASSWORD:-admin}@eureka-server:8761/eureka/
       JDK_JAVA_OPTIONS: "-Xms128m -Xmx256m"
     networks:
       - hms-network
@@ -271,7 +271,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       JWT_SECRETKEY: ${JWT_SECRET}
-      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:admin}:${EUREKA_PASSWORD:admin}@eureka-server:8761/eureka/
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:-admin}:${EUREKA_PASSWORD:-admin}@eureka-server:8761/eureka/
       JDK_JAVA_OPTIONS: "-Xms128m -Xmx256m"
     networks:
       - hms-network
@@ -297,7 +297,7 @@ services:
       DOCTOR_SERVICE_URL: http://doctor-service:8082
       PATIENT_SERVICE_URL: http://patient-service:8084
       NOTIFICATION_SERVICE_URL: http://notification-service:8087
-      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:admin}:${EUREKA_PASSWORD:admin}@eureka-server:8761/eureka/
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:-admin}:${EUREKA_PASSWORD:-admin}@eureka-server:8761/eureka/
       JDK_JAVA_OPTIONS: "-Xms128m -Xmx256m"
     networks:
       - hms-network
@@ -320,7 +320,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       JWT_SECRETKEY: ${JWT_SECRET}
-      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:admin}:${EUREKA_PASSWORD:admin}@eureka-server:8761/eureka/
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:-admin}:${EUREKA_PASSWORD:-admin}@eureka-server:8761/eureka/
       JDK_JAVA_OPTIONS: "-Xms128m -Xmx256m"
     networks:
       - hms-network
@@ -343,7 +343,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       JWT_SECRETKEY: ${JWT_SECRET}
-      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:admin}:${EUREKA_PASSWORD:admin}@eureka-server:8761/eureka/
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:-admin}:${EUREKA_PASSWORD:-admin}@eureka-server:8761/eureka/
       JDK_JAVA_OPTIONS: "-Xms128m -Xmx256m"
     networks:
       - hms-network
@@ -366,7 +366,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       JWT_SECRETKEY: ${JWT_SECRET}
-      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:admin}:${EUREKA_PASSWORD:admin}@eureka-server:8761/eureka/
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:-admin}:${EUREKA_PASSWORD:-admin}@eureka-server:8761/eureka/
       JDK_JAVA_OPTIONS: "-Xms128m -Xmx256m"
     networks:
       - hms-network
@@ -385,7 +385,7 @@ services:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       SPRING_MAIL_USERNAME: ${MAIL_USERNAME}
       SPRING_MAIL_PASSWORD: ${MAIL_PASSWORD}
-      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:admin}:${EUREKA_PASSWORD:admin}@eureka-server:8761/eureka/
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:-admin}:${EUREKA_PASSWORD:-admin}@eureka-server:8761/eureka/
       JDK_JAVA_OPTIONS: "-Xms128m -Xmx256m"
     networks:
       - hms-network
@@ -409,7 +409,7 @@ services:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       JWT_SECRETKEY: ${JWT_SECRET}
       PHARMACY_SERVICE_URL: http://pharmacy-service:8086
-      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:admin}:${EUREKA_PASSWORD:admin}@eureka-server:8761/eureka/
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:-admin}:${EUREKA_PASSWORD:-admin}@eureka-server:8761/eureka/
       JDK_JAVA_OPTIONS: "-Xms128m -Xmx256m"
       GROQ_API_KEY: ${GROQ_API_KEY}
     networks:
@@ -433,7 +433,7 @@ services:
       APPOINTMENT_SERVICE_URL: http://appointment-service:8083
       BILLING_SERVICE_URL: http://billing-service:8085
       PHARMACY_SERVICE_URL: http://pharmacy-service:8086
-      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:admin}:${EUREKA_PASSWORD:admin}@eureka-server:8761/eureka/
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:-admin}:${EUREKA_PASSWORD:-admin}@eureka-server:8761/eureka/
       JDK_JAVA_OPTIONS: "-Xms128m -Xmx256m"
     networks:
       - hms-network
@@ -466,7 +466,7 @@ services:
       PHARMACY_SERVICE_URL: http://pharmacy-service:8086
       CLINICAL_SERVICE_URL: http://clinical-service:8088
       ADMIN_SERVICE_URL: http://admin-service:8081
-      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:admin}:${EUREKA_PASSWORD:admin}@eureka-server:8761/eureka/
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:-admin}:${EUREKA_PASSWORD:-admin}@eureka-server:8761/eureka/
       JDK_JAVA_OPTIONS: "-Xms128m -Xmx256m"
     networks:
       - hms-network
