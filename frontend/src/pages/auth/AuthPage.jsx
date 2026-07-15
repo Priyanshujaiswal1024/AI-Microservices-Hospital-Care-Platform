@@ -645,9 +645,21 @@ export default function AuthPage() {
                 <button
                   type="button"
                   onClick={() => {
-                    const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
-                    const gatewayBase = apiBase.replace(/\/api\/v1\/?$/, '');
-                    window.location.href = `${gatewayBase}/oauth2/authorization/google`;
+                    // Frontend-direct OAuth flow:
+                    // Google redirects back to our Vercel URL (HTTPS ✅, valid domain ✅)
+                    // Then /oauth/callback?code=... exchanges the code with our backend
+                    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+                    const redirectUri = `${window.location.origin}/oauth/callback`;
+                    const scope = 'email profile';
+                    const googleAuthUrl =
+                      `https://accounts.google.com/o/oauth2/v2/auth` +
+                      `?client_id=${encodeURIComponent(clientId)}` +
+                      `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+                      `&response_type=code` +
+                      `&scope=${encodeURIComponent(scope)}` +
+                      `&access_type=offline` +
+                      `&prompt=consent`;
+                    window.location.href = googleAuthUrl;
                   }}
                   className="w-full inline-flex justify-center items-center py-2.5 px-4 rounded-xl bg-white text-xs font-bold transition-all active:scale-[0.98] border"
                   style={{ borderColor: COLOR.line, color: COLOR.ink }}
