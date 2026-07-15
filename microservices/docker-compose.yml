@@ -462,15 +462,15 @@ services:
       - admin-service
     environment:
       JWT_SECRETKEY: ${JWT_SECRET}
-      AUTH_SERVICE_URL: http://auth-service:8089
-      DOCTOR_SERVICE_URL: http://doctor-service:8082
-      
-      APPOINTMENT_SERVICE_URL: http://appointment-service:8083
-      PATIENT_SERVICE_URL: http://patient-service:8084
-      BILLING_SERVICE_URL: http://billing-service:8085
-      PHARMACY_SERVICE_URL: http://pharmacy-service:8086
-      CLINICAL_SERVICE_URL: http://clinical-service:8088
-      ADMIN_SERVICE_URL: http://admin-service:8081
+      FRONTEND_URL: ${FRONTEND_URL}
+      AUTH_SERVICE_HOST: auth-service
+      DOCTOR_SERVICE_HOST: doctor-service
+      APPOINTMENT_SERVICE_HOST: appointment-service
+      PATIENT_SERVICE_HOST: patient-service
+      BILLING_SERVICE_HOST: billing-service
+      PHARMACY_SERVICE_HOST: pharmacy-service
+      CLINICAL_SERVICE_HOST: clinical-service
+      ADMIN_SERVICE_HOST: admin-service
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:-admin}:${EUREKA_PASSWORD:-admin}@eureka-server:8761/eureka/
       JDK_JAVA_OPTIONS: "-Xms128m -Xmx256m"
     networks:
