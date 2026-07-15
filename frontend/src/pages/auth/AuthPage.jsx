@@ -648,7 +648,8 @@ export default function AuthPage() {
                     // Frontend-direct OAuth flow:
                     // Google redirects back to our Vercel URL (HTTPS ✅, valid domain ✅)
                     // Then /oauth/callback?code=... exchanges the code with our backend
-                    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+                    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+                      || '88515558032-k81jndh14srbe9dkvu2t3q0d1es0ndif.apps.googleusercontent.com';
                     const redirectUri = `${window.location.origin}/oauth/callback`;
                     const scope = 'email profile';
                     const googleAuthUrl =
