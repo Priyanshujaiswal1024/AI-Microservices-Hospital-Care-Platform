@@ -408,7 +408,10 @@ services:
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       JWT_SECRETKEY: ${JWT_SECRET}
-      PHARMACY_SERVICE_URL: http://pharmacy-service:8086
+      PHARMACY_SERVICE_HOST: pharmacy-service
+      APPOINTMENT_SERVICE_HOST: appointment-service
+      PATIENT_SERVICE_HOST: patient-service
+      BILLING_SERVICE_HOST: billing-service
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://${EUREKA_USERNAME:-admin}:${EUREKA_PASSWORD:-admin}@eureka-server:8761/eureka/
       JDK_JAVA_OPTIONS: "-Xms128m -Xmx256m"
       GROQ_API_KEY: ${GROQ_API_KEY}
