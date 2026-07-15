@@ -645,7 +645,9 @@ export default function AuthPage() {
                 <button
                   type="button"
                   onClick={() => {
-                    window.location.href = 'http://localhost:8000/oauth2/authorization/google';
+                    const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+                    const gatewayBase = apiBase.replace(/\/api\/v1\/?$/, '');
+                    window.location.href = `${gatewayBase}/oauth2/authorization/google`;
                   }}
                   className="w-full inline-flex justify-center items-center py-2.5 px-4 rounded-xl bg-white text-xs font-bold transition-all active:scale-[0.98] border"
                   style={{ borderColor: COLOR.line, color: COLOR.ink }}
