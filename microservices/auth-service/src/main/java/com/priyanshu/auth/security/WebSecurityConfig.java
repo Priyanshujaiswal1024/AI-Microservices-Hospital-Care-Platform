@@ -46,7 +46,15 @@ public class WebSecurityConfig {
                 // ── API Exception Handling (Don't redirect to OAuth2 on error) ──
                 .exceptionHandling(ex -> ex
                         .defaultAuthenticationEntryPointFor(
-                                (request, response, authException) -> response.sendError(401, "Unauthorized"),
+                                (request, response, authException) -> {
+                                    response.setStatus(401);
+                                    response.setContentType("application/json");
+                                    String msg = authException.getMessage();
+                                    if (msg != null && msg.contains("Bad credentials")) {
+                                        msg = "Wrong password or email";
+                                    }
+                                    response.getWriter().write("{\"message\": \"" + msg + "\"}");
+                                },
                                 new org.springframework.security.web.util.matcher.AntPathRequestMatcher("/api/**")
                         )
                 )
