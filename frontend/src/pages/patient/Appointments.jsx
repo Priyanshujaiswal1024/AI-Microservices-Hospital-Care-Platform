@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useNavigate }         from 'react-router-dom';
 import api                     from '../../api/axios';
+import Pagination              from '../../components/Pagination';
+import { Clock, CheckCircle2, Check, XCircle, Plus, Calendar } from 'lucide-react';
 
 const statusConfig = {
-    BOOKED:    { bg:'#fffbeb', color:'#92400e', border:'#fde68a', label:'Booked',    icon:'🕐' },
-    CONFIRMED: { bg:'#f0fdf4', color:'#166534', border:'#bbf7d0', label:'Confirmed', icon:'✅' },
-    COMPLETED: { bg:'#f3f4f6', color:'#374151', border:'#e5e7eb', label:'Completed', icon:'🏁' },
-    CANCELLED: { bg:'#fef2f2', color:'#dc2626', border:'#fecaca', label:'Cancelled', icon:'❌' },
+    BOOKED:    { bg:'#fffbeb', color:'#92400e', border:'#fde68a', label:'Booked',    icon: Clock },
+    CONFIRMED: { bg:'#f0fdf4', color:'#166534', border:'#bbf7d0', label:'Confirmed', icon: CheckCircle2 },
+    COMPLETED: { bg:'#f8fafc', color:'#334155', border:'#e2e8f0', label:'Completed', icon: Check },
+    CANCELLED: { bg:'#fef2f2', color:'#dc2626', border:'#fecaca', label:'Cancelled', icon: XCircle },
 };
 
 export default function Appointments() {
@@ -16,6 +18,8 @@ export default function Appointments() {
     const [filter, setFilter]             = useState('ALL');
     const [cancelling, setCancelling]     = useState(null);
     const [error, setError]               = useState('');
+    const [currentPage, setCurrentPage]   = useState(1);
+    const [pageSize, setPageSize]         = useState(10);
 
     useEffect(() => { fetchAppointments(); }, []);
 
@@ -293,137 +297,152 @@ export default function Appointments() {
                         </button>
                     </div>
                 ) : (
-                    <div style={{ display:'flex', flexDirection:'column', gap:'10px' }}>
-                        {filtered.map(appt => {
-                            const sc = statusConfig[appt.status] || statusConfig.BOOKED;
-                            const initials = appt.doctorName
-                                ?.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase();
-                            const isUpcoming = ['BOOKED','CONFIRMED'].includes(appt.status);
-                            const apptDate = new Date(appt.appointmentTime);
-                            const isToday = new Date().toDateString() === apptDate.toDateString();
+                    <>
+                        <div style={{ display:'flex', flexDirection:'column', gap:'10px' }}>
+                            {filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize).map(appt => {
+                                const sc = statusConfig[appt.status] || statusConfig.BOOKED;
+                                const StatusIcon = sc.icon;
+                                const initials = appt.doctorName
+                                    ?.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase();
+                                const isUpcoming = ['BOOKED','CONFIRMED'].includes(appt.status);
+                                const apptDate = new Date(appt.appointmentTime);
+                                const isToday = new Date().toDateString() === apptDate.toDateString();
 
-                            return (
-                                <div key={appt.id} style={{
-                                    background:'#fff',
-                                    border: isUpcoming ? '1px solid #bbf7d0' : '1px solid #f0f0f0',
-                                    borderRadius:'12px', padding:'14px 16px',
-                                    display:'flex', alignItems:'center',
-                                    gap:'14px', transition:'all .15s',
-                                    boxShadow: isUpcoming ? '0 2px 8px rgba(10,79,58,.06)' : 'none',
-                                }}
-                                     onMouseEnter={e => {
-                                         e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,.06)';
-                                         e.currentTarget.style.transform = 'translateY(-1px)';
-                                     }}
-                                     onMouseLeave={e => {
-                                         e.currentTarget.style.boxShadow = isUpcoming ? '0 2px 8px rgba(10,79,58,.06)' : 'none';
-                                         e.currentTarget.style.transform = 'none';
-                                     }}
-                                >
-                                    {/* avatar */}
-                                    <div style={{
-                                        width:'44px', height:'44px', borderRadius:'11px',
-                                        background:'linear-gradient(135deg,#0a4f3a,#1D9E75)',
-                                        color:'#fff', fontSize:'14px', fontWeight:700,
+                                return (
+                                    <div key={appt.id} style={{
+                                        background:'#fff',
+                                        border: isUpcoming ? '1px solid #99f6e4' : '1px solid #e2e8f0',
+                                        borderRadius:'12px', padding:'14px 16px',
                                         display:'flex', alignItems:'center',
-                                        justifyContent:'center', flexShrink:0,
-                                    }}>
-                                        {initials}
-                                    </div>
-
-                                    {/* doctor + date */}
-                                    <div style={{ flex:1, minWidth:0 }}>
+                                        gap:'14px', transition:'all .15s',
+                                        boxShadow: isUpcoming ? '0 2px 8px rgba(13,148,136,.06)' : 'none',
+                                    }}
+                                         onMouseEnter={e => {
+                                             e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,.06)';
+                                             e.currentTarget.style.transform = 'translateY(-1px)';
+                                         }}
+                                         onMouseLeave={e => {
+                                             e.currentTarget.style.boxShadow = isUpcoming ? '0 2px 8px rgba(13,148,136,.06)' : 'none';
+                                             e.currentTarget.style.transform = 'none';
+                                         }}
+                                    >
+                                        {/* avatar */}
                                         <div style={{
-                                            display:'flex', alignItems:'center', gap:'8px',
-                                            marginBottom:'3px',
+                                            width:'44px', height:'44px', borderRadius:'11px',
+                                            background:'linear-gradient(135deg, #0d9488 0%, #0f172a 100%)',
+                                            color:'#fff', fontSize:'14px', fontWeight:700,
+                                            display:'flex', alignItems:'center',
+                                            justifyContent:'center', flexShrink:0,
                                         }}>
+                                            {initials}
+                                        </div>
+
+                                        {/* doctor + date */}
+                                        <div style={{ flex:1, minWidth:0 }}>
                                             <div style={{
-                                                fontSize:'13px', fontWeight:700, color:'#111',
+                                                display:'flex', alignItems:'center', gap:'8px',
+                                                marginBottom:'3px',
                                             }}>
-                                                {appt.doctorName}
+                                                <div style={{
+                                                    fontSize:'13px', fontWeight:700, color:'#0f172a',
+                                                }}>
+                                                    {appt.doctorName}
+                                                </div>
+                                                {/* TODAY badge */}
+                                                {isToday && (
+                                                    <span style={{
+                                                        background:'#fef3c7', color:'#92400e',
+                                                        fontSize:'9px', fontWeight:700,
+                                                        padding:'2px 7px', borderRadius:'6px',
+                                                        border:'1px solid #fde68a',
+                                                    }}>
+                                                        TODAY
+                                                    </span>
+                                                )}
+                                                {/* UPCOMING badge */}
+                                                {isUpcoming && !isToday && (
+                                                    <span style={{
+                                                        background:'#f0fdf4', color:'#0d9488',
+                                                        fontSize:'9px', fontWeight:700,
+                                                        padding:'2px 7px', borderRadius:'6px',
+                                                        border:'1px solid #99f6e4',
+                                                    }}>
+                                                        UPCOMING
+                                                    </span>
+                                                )}
                                             </div>
-                                            {/* TODAY badge */}
-                                            {isToday && (
-                                                <span style={{
-                                                    background:'#fef3c7', color:'#92400e',
-                                                    fontSize:'9px', fontWeight:700,
-                                                    padding:'2px 7px', borderRadius:'6px',
-                                                    border:'1px solid #fde68a',
-                                                }}>
-                                                    TODAY
-                                                </span>
-                                            )}
-                                            {/* UPCOMING badge */}
-                                            {isUpcoming && !isToday && (
-                                                <span style={{
-                                                    background:'#E1F5EE', color:'#065f46',
-                                                    fontSize:'9px', fontWeight:700,
-                                                    padding:'2px 7px', borderRadius:'6px',
-                                                }}>
-                                                    UPCOMING
-                                                </span>
-                                            )}
+
+                                            <div style={{
+                                                fontSize:'11px', color:'#0d9488', fontWeight:600,
+                                                marginBottom:'4px',
+                                            }}>
+                                                {appt.departmentName}
+                                            </div>
+
+                                            <div style={{
+                                                fontSize:'11px', color:'#64748b',
+                                                display:'flex', alignItems:'center', gap:'12px',
+                                                flexWrap:'wrap',
+                                            }}>
+                                                <span>📅 {appt.appointmentTime ? new Date(appt.appointmentTime).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}</span>
+                                                <span>⏰ {appt.appointmentTime ? new Date(appt.appointmentTime).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : 'N/A'}</span>
+                                                {appt.reason && <span>📝 {appt.reason}</span>}
+                                            </div>
                                         </div>
+
+                                        {/* status pill */}
                                         <div style={{
-                                            fontSize:'11px', color:'#6b7280',
-                                            display:'flex', alignItems:'center', gap:'12px',
+                                            display:'flex', alignItems:'center', gap:'4px',
+                                            background:sc.bg, color:sc.color,
+                                            border:`1px solid ${sc.border}`,
+                                            padding:'3px 10px', borderRadius:'20px',
+                                            fontSize:'11px', fontWeight:600, flexShrink:0,
                                         }}>
-                                            <span>🗓 {apptDate.toLocaleDateString('en-IN', {
-                                                day:'numeric', month:'short', year:'numeric',
-                                            })}</span>
-                                            <span>🕐 {apptDate.toLocaleTimeString('en-IN', {
-                                                hour:'2-digit', minute:'2-digit',
-                                            })}</span>
-                                            {appt.reason && (
-                                                <span style={{
-                                                    overflow:'hidden', textOverflow:'ellipsis',
-                                                    whiteSpace:'nowrap', maxWidth:'120px',
-                                                }}>
-                                                    💬 {appt.reason}
-                                                </span>
-                                            )}
+                                            <StatusIcon size={12} />
+                                            <span>{sc.label}</span>
                                         </div>
+
+                                        {/* cancel button */}
+                                        {isUpcoming && (
+                                            <button
+                                                onClick={() => handleCancel(appt.id)}
+                                                disabled={cancelling === appt.id}
+                                                style={{
+                                                    padding:'5px 12px', borderRadius:'7px',
+                                                    border:'1px solid #fecaca',
+                                                    background:'#fef2f2', color:'#dc2626',
+                                                    fontSize:'11px', fontWeight:600,
+                                                    cursor:'pointer', flexShrink:0,
+                                                    transition:'all .12s',
+                                                }}
+                                                onMouseEnter={e => {
+                                                    e.currentTarget.style.background = '#dc2626';
+                                                    e.currentTarget.style.color = '#fff';
+                                                }}
+                                                onMouseLeave={e => {
+                                                    e.currentTarget.style.background = '#fef2f2';
+                                                    e.currentTarget.style.color = '#dc2626';
+                                                }}
+                                            >
+                                                {cancelling === appt.id ? '...' : 'Cancel'}
+                                            </button>
+                                        )}
                                     </div>
-
-                                    {/* status */}
-                                    <span style={{
-                                        background: sc.bg, color: sc.color,
-                                        border: `1px solid ${sc.border}`,
-                                        padding:'4px 10px', borderRadius:'8px',
-                                        fontSize:'10px', fontWeight:700, flexShrink:0,
-                                    }}>
-                                        {sc.icon} {sc.label}
-                                    </span>
-
-                                    {/* cancel button */}
-                                    {isUpcoming && (
-                                        <button
-                                            onClick={() => handleCancel(appt.id)}
-                                            disabled={cancelling === appt.id}
-                                            style={{
-                                                padding:'5px 12px', borderRadius:'7px',
-                                                border:'1px solid #fecaca',
-                                                background:'#fef2f2', color:'#dc2626',
-                                                fontSize:'11px', fontWeight:600,
-                                                cursor:'pointer', flexShrink:0,
-                                                transition:'all .12s',
-                                            }}
-                                            onMouseEnter={e => {
-                                                e.currentTarget.style.background = '#dc2626';
-                                                e.currentTarget.style.color = '#fff';
-                                            }}
-                                            onMouseLeave={e => {
-                                                e.currentTarget.style.background = '#fef2f2';
-                                                e.currentTarget.style.color = '#dc2626';
-                                            }}
-                                        >
-                                            {cancelling === appt.id ? '...' : '✕ Cancel'}
-                                        </button>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
+                                );
+                            })}
+                        </div>
+                        <div style={{ marginTop: 16, background: '#fff', borderRadius: 12, border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={Math.ceil(filtered.length / pageSize) || 1}
+                                totalItems={filtered.length}
+                                pageSize={pageSize}
+                                onPageChange={setCurrentPage}
+                                onPageSizeChange={(sz) => { setPageSize(sz); setCurrentPage(1); }}
+                                itemLabel="appointments"
+                            />
+                        </div>
+                    </>
                 )}
             </div>
 

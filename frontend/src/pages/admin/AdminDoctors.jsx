@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../../api/axios';
+import Pagination from '../../components/Pagination';
 
 const inp = {
     width:'100%', border:'1px solid #e2e8f0', borderRadius:'9px',
@@ -84,6 +85,8 @@ export default function AdminDoctors() {
     const [error,       setError]       = useState('');
     const [success,     setSuccess]     = useState('');
     const [isMobile,    setIsMobile]    = useState(window.innerWidth < 768);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize,    setPageSize]    = useState(10);
 
     useEffect(() => {
         const handler = () => setIsMobile(window.innerWidth < 768);
@@ -253,7 +256,7 @@ export default function AdminDoctors() {
                                 {search ? `No results for "${search}"` : 'No doctors yet'}
                             </div>
                         </div>
-                    ) : filtered.map((doc, idx) => {
+                    ) : filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((doc, idx) => {
                         const colors = [['#EFF6FF','#2563eb'],['#F5F3FF','#7c3aed'],['#FFF7ED','#c2410c'],['#F0FDF4','#15803d'],['#FEF2F2','#dc2626']];
                         const [bg, tc] = colors[idx % colors.length];
                         const ini = doc.name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || '??';
@@ -274,8 +277,8 @@ export default function AdminDoctors() {
                                 <div style={{ fontSize:'12px', color:'#475569' }}>{doc.experienceYears ? `${doc.experienceYears} yrs` : '—'}</div>
                                 <div style={{ fontSize:'11px', color:'#374151' }}>{safeDepts(doc.departments)}</div>
                                 <div style={{ display:'flex', gap:'5px' }}>
-                                    <button onClick={() => openEdit(doc)} style={{ padding:'5px 10px', borderRadius:'7px', border:'none', background:'#eff6ff', color:'#2563eb', fontSize:'11px', fontWeight:600, cursor:'pointer' }}>✏️ Edit</button>
-                                    <button onClick={() => setDeleting(doc)} style={{ padding:'5px 10px', borderRadius:'7px', border:'none', background:'#fef2f2', color:'#dc2626', fontSize:'11px', fontWeight:600, cursor:'pointer' }}>🗑️</button>
+                                    <button onClick={() => openEdit(doc)} style={{ padding:'5px 10px', borderRadius:'7px', border:'none', background:'#eff6ff', color:'#2563eb', fontSize:'11px', fontWeight:600, cursor:'pointer' }}>Edit</button>
+                                    <button onClick={() => setDeleting(doc)} style={{ padding:'5px 10px', borderRadius:'7px', border:'none', background:'#fef2f2', color:'#dc2626', fontSize:'11px', fontWeight:600, cursor:'pointer' }}>Delete</button>
                                 </div>
                             </div>
                         );
@@ -291,9 +294,21 @@ export default function AdminDoctors() {
                             <div style={{ fontSize:'40px', marginBottom:'10px' }}>🩺</div>
                             <div style={{ fontSize:'14px', fontWeight:700, color:'#374151' }}>{search ? `No results for "${search}"` : 'No doctors yet'}</div>
                         </div>
-                    ) : filtered.map((doc, idx) => (
+                    ) : filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((doc, idx) => (
                         <DoctorCard key={doc.id} doc={doc} idx={idx} onEdit={openEdit} onDelete={setDeleting} safeName={safeName} safeDepts={safeDepts}/>
                     ))}
+                </div>
+
+                <div style={{ marginTop: 16, background: '#fff', borderRadius: 12, border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={Math.ceil(filtered.length / pageSize) || 1}
+                        totalItems={filtered.length}
+                        pageSize={pageSize}
+                        onPageChange={setCurrentPage}
+                        onPageSizeChange={(sz) => { setPageSize(sz); setCurrentPage(1); }}
+                        itemLabel="doctors"
+                    />
                 </div>
             </div>
 

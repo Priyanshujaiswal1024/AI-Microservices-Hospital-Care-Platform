@@ -1,6 +1,22 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
+import { 
+    CheckCircle2, 
+    XCircle, 
+    AlertCircle, 
+    AlertTriangle, 
+    ChevronLeft, 
+    ChevronRight, 
+    Check, 
+    Lightbulb, 
+    Phone, 
+    User, 
+    MapPin, 
+    Activity, 
+    Shield, 
+    Loader2 
+} from 'lucide-react';
 
 const bloodGroups = ['A_POSITIVE','A_NEGATIVE','B_POSITIVE','B_NEGATIVE',
     'AB_POSITIVE','AB_NEGATIVE','O_POSITIVE','O_NEGATIVE'];
@@ -10,56 +26,42 @@ const bloodGroupLabels = {
     AB_POSITIVE: 'AB+', AB_NEGATIVE: 'AB−', O_POSITIVE: 'O+', O_NEGATIVE: 'O−',
 };
 
-/* ══════════════════════════════════════════════════════
-   INDIAN PHONE INPUT COMPONENT
-   - +91 prefix always visible
-   - Digits only (strips letters/symbols automatically)
-   - Exactly 10 digits required
-   - Must start with 6, 7, 8 or 9
-   - Live ✅/❌ indicator
-   - Helper text: "3 more digits needed" etc.
-══════════════════════════════════════════════════════ */
 function IndianPhoneInput({ value, onChange, readOnly = false, error }) {
-    // Strip +91 prefix to show only 10 digits in input box
     const raw = (value || '').replace(/^\+91\s?/, '').replace(/\D/g, '');
 
     const isValid   = raw.length === 10 && /^[6-9]/.test(raw);
     const isTouched = raw.length > 0;
 
-    // Border color logic
     const borderColor = error
         ? '#fca5a5'
         : isTouched && !isValid
-            ? '#fbbf24'   // yellow — incomplete/invalid
+            ? '#f59e0b'   
             : isTouched && isValid
-                ? '#0a4f3a' // green — valid
-                : '#e5e7eb';  // default gray
+                ? '#0d9488' 
+                : '#cbd5e1';  
 
-    // Helper text + color
     let helperText = '';
-    let helperColor = '#94a3b8';
+    let helperColor = '#64748b';
     if (error) {
         helperText  = error;
         helperColor = '#ef4444';
     } else if (isTouched && raw.length < 10) {
         const rem   = 10 - raw.length;
-        helperText  = `⚠ ${rem} more digit${rem !== 1 ? 's' : ''} needed`;
+        helperText  = `${rem} more digit${rem !== 1 ? 's' : ''} needed`;
         helperColor = '#d97706';
     } else if (isTouched && raw.length === 10 && !/^[6-9]/.test(raw)) {
-        helperText  = '⚠ Indian mobile must start with 6, 7, 8 or 9';
+        helperText  = 'Indian mobile must start with 6, 7, 8 or 9';
         helperColor = '#ef4444';
     } else if (isValid) {
-        helperText  = '✓ Valid Indian mobile number';
-        helperColor = '#15803d';
+        helperText  = 'Valid Indian mobile number';
+        helperColor = '#10b981';
     } else if (!isTouched) {
         helperText  = 'Enter 10-digit Indian mobile number';
-        helperColor = '#94a3b8';
+        helperColor = '#64748b';
     }
 
     function handleChange(e) {
-        // Allow only digits, max 10
         const digits = e.target.value.replace(/\D/g, '').slice(0, 10);
-        // Store internally as "+91 XXXXXXXXXX"
         onChange(digits ? `+91 ${digits}` : '');
     }
 
@@ -67,16 +69,16 @@ function IndianPhoneInput({ value, onChange, readOnly = false, error }) {
         return (
             <div style={{
                 display: 'flex', borderRadius: '10px',
-                border: '1px solid #bbf7d0', background: '#f0fdf4',
+                border: '1px solid #99f6e4', background: '#f0fdf4',
                 overflow: 'hidden',
             }}>
                 <div style={{
-                    padding: '10px 11px', background: '#dcfce7',
-                    borderRight: '1px solid #bbf7d0',
-                    fontSize: 13, fontWeight: 700, color: '#0a4f3a',
+                    padding: '10px 12px', background: '#ccfbf1',
+                    borderRight: '1px solid #99f6e4',
+                    fontSize: 13, fontWeight: 700, color: '#0f766e',
                     display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0,
                 }}>
-                    🇮🇳 +91
+                    +91
                 </div>
                 <input
                     readOnly
@@ -84,8 +86,8 @@ function IndianPhoneInput({ value, onChange, readOnly = false, error }) {
                     style={{
                         flex: 1, border: 'none', outline: 'none',
                         padding: '10px 12px', fontSize: 13,
-                        background: 'transparent', color: '#374151',
-                        fontFamily: 'Outfit, sans-serif',
+                        background: 'transparent', color: '#334155',
+                        fontFamily: 'Inter, system-ui, sans-serif',
                         cursor: 'not-allowed',
                     }}
                 />
@@ -95,31 +97,28 @@ function IndianPhoneInput({ value, onChange, readOnly = false, error }) {
 
     return (
         <div>
-            {/* Input row */}
             <div style={{
                 display: 'flex', borderRadius: '10px',
                 border: `1.5px solid ${borderColor}`,
-                background: '#fafafa', overflow: 'hidden',
+                background: '#f8fafc', overflow: 'hidden',
                 transition: 'border-color .15s, box-shadow .15s',
             }}
-                 onFocus={e => e.currentTarget.style.boxShadow = '0 0 0 3px rgba(10,79,58,.1)'}
+                 onFocus={e => e.currentTarget.style.boxShadow = '0 0 0 3px rgba(13,148,136,.12)'}
                  onBlur={e  => e.currentTarget.style.boxShadow = 'none'}
             >
-                {/* +91 badge */}
                 <div style={{
                     padding: '10px 12px',
-                    background: '#f0fdf4',
+                    background: '#f1f5f9',
                     borderRight: `1.5px solid ${borderColor}`,
-                    fontSize: 13, fontWeight: 700, color: '#0a4f3a',
+                    fontSize: 13, fontWeight: 700, color: '#0f172a',
                     whiteSpace: 'nowrap',
                     display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0,
                     transition: 'border-color .15s',
                     userSelect: 'none',
                 }}>
-                    🇮🇳 +91
+                    +91
                 </div>
 
-                {/* Digits-only input */}
                 <input
                     type="tel"
                     inputMode="numeric"
@@ -130,41 +129,34 @@ function IndianPhoneInput({ value, onChange, readOnly = false, error }) {
                     style={{
                         flex: 1, border: 'none', outline: 'none',
                         padding: '10px 12px', fontSize: 13,
-                        background: 'transparent', color: '#111',
-                        fontFamily: 'Outfit, sans-serif',
+                        background: 'transparent', color: '#0f172a',
+                        fontFamily: 'Inter, system-ui, sans-serif',
                         letterSpacing: '.04em',
                     }}
                 />
 
-                {/* Live ✅ / ❌ indicator */}
                 {isTouched && (
                     <div style={{
                         padding: '10px 12px',
                         display: 'flex', alignItems: 'center',
-                        fontSize: 16, flexShrink: 0,
+                        flexShrink: 0,
                     }}>
-                        {isValid ? '✅' : '❌'}
+                        {isValid ? <CheckCircle2 size={16} color="#10b981" /> : <XCircle size={16} color="#ef4444" />}
                     </div>
                 )}
             </div>
 
-            {/* Helper text */}
             {helperText && (
-                <div style={{ fontSize: 10, marginTop: 4, color: helperColor, fontWeight: helperColor !== '#94a3b8' ? 600 : 400, lineHeight: 1.4 }}>
-                    {helperText}
+                <div style={{ fontSize: 11, marginTop: 4, color: helperColor, fontWeight: helperColor !== '#64748b' ? 600 : 400, lineHeight: 1.4, display: 'flex', alignItems: 'center', gap: 4 }}>
+                    {helperColor === '#ef4444' && <AlertCircle size={12} />}
+                    {helperColor === '#10b981' && <CheckCircle2 size={12} />}
+                    <span>{helperText}</span>
                 </div>
             )}
         </div>
     );
 }
 
-/* ══════════════════════════════════════════════════════
-   EMERGENCY CONTACT PHONE (same component, separate instance)
-══════════════════════════════════════════════════════ */
-
-/* ══════════════════════════════════════════════════════
-   VALIDATORS
-══════════════════════════════════════════════════════ */
 const TODAY   = new Date().toISOString().split('T')[0];
 const MIN_DOB = '1900-01-01';
 
@@ -179,7 +171,7 @@ function validatePhone(value) {
 }
 
 function validateEmergencyPhone(value) {
-    if (!value) return null; // optional
+    if (!value) return null;
     const digits = value.replace(/^\+91\s?/, '').replace(/\D/g, '');
     if (digits.length > 0 && digits.length < 10) return `${10 - digits.length} more digit${10 - digits.length !== 1 ? 's' : ''} needed`;
     if (digits.length > 10)   return 'Must be exactly 10 digits';
@@ -211,7 +203,6 @@ function validateStep2(form) {
     if (!form.pincode?.trim()) e.pincode = 'Pincode is required';
     else if (!/^[1-9][0-9]{5}$/.test(form.pincode.trim())) e.pincode = 'Enter a valid 6-digit Indian pincode';
 
-    // Cross-field: name + phone both required together
     const emergPhoneErr = validateEmergencyPhone(form.emergencyContactPhone);
     if (emergPhoneErr) e.emergencyContactPhone = emergPhoneErr;
     if (form.emergencyContactName?.trim() && !form.emergencyContactPhone)
@@ -221,9 +212,6 @@ function validateStep2(form) {
     return e;
 }
 
-/* ══════════════════════════════════════════════════════
-   MAIN COMPONENT
-══════════════════════════════════════════════════════ */
 export default function CreateProfile() {
     const navigate = useNavigate();
     const [step,    setStep]    = useState(1);
@@ -237,7 +225,6 @@ export default function CreateProfile() {
         bloodGroup: '', height: '', weight: '',
     });
 
-    // Pre-fill from localStorage
     useEffect(() => {
         try {
             const raw = localStorage.getItem('userInfo');
@@ -300,7 +287,6 @@ export default function CreateProfile() {
                 : {};
         if (Object.keys(errs).length > 0) {
             setErrors(errs);
-            // Scroll to first error
             setTimeout(() => document.querySelector('[data-err="true"]')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
             return;
         }
@@ -309,47 +295,47 @@ export default function CreateProfile() {
         window.scrollTo(0, 0);
     }
 
-    /* ── Styles ── */
     const inp = (hasErr) => ({
-        width: '100%', border: `1.5px solid ${hasErr ? '#fca5a5' : '#e5e7eb'}`,
+        width: '100%', border: `1.5px solid ${hasErr ? '#fca5a5' : '#cbd5e1'}`,
         borderRadius: '10px', padding: '10px 14px', fontSize: '13px', outline: 'none',
-        background: hasErr ? '#fff5f5' : '#fafafa', color: '#111',
-        fontFamily: 'Outfit, sans-serif', transition: 'border .15s', boxSizing: 'border-box',
+        background: hasErr ? '#fff5f5' : '#f8fafc', color: '#0f172a',
+        fontFamily: 'Inter, system-ui, sans-serif', transition: 'border .15s', boxSizing: 'border-box',
     });
     const inpRO = {
-        ...inp(false), background: '#f0fdf4', color: '#374151',
-        border: '1px solid #bbf7d0', cursor: 'not-allowed',
+        ...inp(false), background: '#f0fdf4', color: '#334155',
+        border: '1px solid #99f6e4', cursor: 'not-allowed',
     };
     const lbl = {
-        fontSize: '11px', fontWeight: 600, color: '#374151',
+        fontSize: '11px', fontWeight: 600, color: '#475569',
         textTransform: 'uppercase', letterSpacing: '.04em',
         marginBottom: '5px', display: 'block',
     };
     const ErrMsg = ({ msg }) => msg
-        ? <div style={{ fontSize: 10, color: '#ef4444', fontWeight: 600, marginTop: 4, lineHeight: 1.4 }}>⚠ {msg}</div>
+        ? <div style={{ fontSize: 11, color: '#ef4444', fontWeight: 600, marginTop: 4, lineHeight: 1.4, display: 'flex', alignItems: 'center', gap: 4 }}>
+            <AlertCircle size={12} />
+            <span>{msg}</span>
+          </div>
         : null;
 
-    /* ── BMI ── */
     const bmi = form.height && form.weight
         ? (parseFloat(form.weight) / ((parseFloat(form.height) / 100) ** 2)).toFixed(1)
         : null;
     const bmiLabel = bmi
-        ? bmi < 18.5 ? '⚠️ Underweight' : bmi < 25 ? '✅ Normal' : bmi < 30 ? '⚠️ Overweight' : '🔴 Obese'
+        ? bmi < 18.5 ? 'Underweight' : bmi < 25 ? 'Normal weight' : bmi < 30 ? 'Overweight' : 'Obese'
         : null;
     const bmiColor = bmi
-        ? bmi < 18.5 ? '#d97706' : bmi < 25 ? '#0a4f3a' : bmi < 30 ? '#d97706' : '#dc2626'
-        : '#0a4f3a';
+        ? bmi < 18.5 ? '#d97706' : bmi < 25 ? '#0d9488' : bmi < 30 ? '#d97706' : '#dc2626'
+        : '#0d9488';
 
     return (
-        <div style={{ minHeight: '100vh', background: '#e8ede9', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', fontFamily: 'Outfit, sans-serif' }}>
+        <div style={{ minHeight: '100vh', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', fontFamily: "'Inter', system-ui, sans-serif" }}>
             <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap');
                 @keyframes spin { to { transform: rotate(360deg); } }
                 * { box-sizing: border-box; }
-                .cp-input-focus:focus { border-color: #0a4f3a!important; box-shadow: 0 0 0 3px rgba(10,79,58,.08)!important; background: #fff!important; }
-                .cp-btn-back:hover  { background: #f3f4f6!important; }
-                .cp-btn-next:hover  { background: #0d6b50!important; transform: translateY(-1px); }
-                .cp-bg-btn:hover    { border-color: #0a4f3a!important; background: #E1F5EE!important; color: #0a4f3a!important; }
+                .cp-input-focus:focus { border-color: #0d9488!important; box-shadow: 0 0 0 3px rgba(13,148,136,.12)!important; background: #fff!important; }
+                .cp-btn-back:hover  { background: #f1f5f9!important; }
+                .cp-btn-next:hover  { background: #0f172a!important; transform: translateY(-1px); }
+                .cp-bg-btn:hover    { border-color: #0d9488!important; background: #f0fdf4!important; color: #0d9488!important; }
                 @media (max-width: 480px) {
                     .cp-2col { grid-template-columns: 1fr!important; }
                     .cp-pad  { padding: 18px 16px!important; }
@@ -357,22 +343,35 @@ export default function CreateProfile() {
                 }
             `}</style>
 
-            <div style={{ background: '#fff', borderRadius: '20px', width: '100%', maxWidth: '580px', boxShadow: '0 20px 60px rgba(0,0,0,.12)', overflow: 'hidden' }}>
+            <div style={{ background: '#fff', borderRadius: '20px', width: '100%', maxWidth: '580px', boxShadow: '0 20px 60px rgba(15,23,42,.12)', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
 
                 {/* ── HEADER ── */}
-                <div className="cp-hdr" style={{ background: 'linear-gradient(120deg, #0a4f3a, #1D9E75)', padding: '24px 28px', color: '#fff' }}>
+                <div className="cp-hdr" style={{ background: 'linear-gradient(145deg, #0f172a 0%, #1e293b 60%, #0f766e 100%)', padding: '24px 28px', color: '#fff' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-                        <div style={{ width: 36, height: 36, background: 'rgba(255,255,255,.15)', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>🏥</div>
-                        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 15, fontWeight: 700 }}>Priyansh Care Hospital</div>
+                        {/* ✅ Stylized P Logo Badge */}
+                        <div style={{ 
+                            width: 36, height: 36, 
+                            background: 'linear-gradient(135deg, #0d9488 0%, #0f172a 100%)', 
+                            borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                            color: '#fff', fontSize: 18, fontWeight: 800, flexShrink: 0,
+                            boxShadow: '0 4px 12px rgba(13,148,136,0.3)',
+                            border: '1px solid rgba(255,255,255,0.2)'
+                        }}>
+                            P
+                        </div>
+                        <div>
+                            <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', lineHeight: 1.1 }}>Priyansh Care Hospital</div>
+                            <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '.08em', marginTop: 2 }}>Medical Portal</div>
+                        </div>
                     </div>
-                    <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700, marginBottom: 4 }}>Complete Your Profile</div>
-                    <div style={{ fontSize: 12, opacity: .75 }}>This helps us provide better care for you</div>
+                    <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 4, tracking: '-0.02em' }}>Complete Your Profile</div>
+                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)' }}>This helps us provide better care for you</div>
 
                     {/* Step bar */}
-                    <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+                    <div style={{ display: 'flex', gap: 8, marginTop: 18 }}>
                         {[{ n:1, label:'Personal' }, { n:2, label:'Address' }, { n:3, label:'Health' }].map(s => (
                             <div key={s.n} style={{ flex: 1 }}>
-                                <div style={{ height: 3, borderRadius: 2, background: step >= s.n ? '#fff' : 'rgba(255,255,255,.3)', marginBottom: 4, transition: 'background .3s' }} />
+                                <div style={{ height: 3, borderRadius: 2, background: step >= s.n ? '#2dd4bf' : 'rgba(255,255,255,.2)', marginBottom: 5, transition: 'background .3s' }} />
                                 <div style={{ fontSize: 10, fontWeight: 600, color: step >= s.n ? '#fff' : 'rgba(255,255,255,.5)' }}>{s.n}. {s.label}</div>
                             </div>
                         ))}
@@ -384,18 +383,15 @@ export default function CreateProfile() {
 
                     {/* API error */}
                     {errors._api && (
-                        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', fontSize: 12, borderRadius: 10, padding: '10px 14px', marginBottom: 16 }}>
-                            ⚠️ {errors._api}
+                        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', fontSize: 12, borderRadius: 10, padding: '10px 14px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <AlertCircle size={16} />
+                            <span>{errors._api}</span>
                         </div>
                     )}
 
-                    {/* ════════════════════════
-                        STEP 1 — Personal Info
-                    ════════════════════════ */}
+                    {/* STEP 1 — Personal Info */}
                     {step === 1 && (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-
-                            {/* Name + Father */}
                             <div className="cp-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                                 <div data-err={!!errors.name}>
                                     <label style={lbl}>Full Name *</label>
@@ -420,7 +416,6 @@ export default function CreateProfile() {
                                 </div>
                             </div>
 
-                            {/* DOB + Gender */}
                             <div className="cp-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                                 <div data-err={!!errors.birthDate}>
                                     <label style={lbl}>Date of Birth *</label>
@@ -433,7 +428,6 @@ export default function CreateProfile() {
                                         min={MIN_DOB}
                                         onChange={e => {
                                             set('birthDate')(e);
-                                            // Immediate DOB check
                                             const d = new Date(e.target.value);
                                             const today = new Date(); today.setHours(0,0,0,0);
                                             if (d >= today) setErrors(ev => ({ ...ev, birthDate: 'Cannot be today or future' }));
@@ -442,8 +436,9 @@ export default function CreateProfile() {
                                     />
                                     <ErrMsg msg={errors.birthDate} />
                                     {form.birthDate && !errors.birthDate && (
-                                        <div style={{ fontSize: 10, color: '#15803d', marginTop: 3, fontWeight: 600 }}>
-                                            ✓ Age: {Math.floor((new Date() - new Date(form.birthDate)) / (365.25 * 24 * 3600 * 1000))} years
+                                        <div style={{ fontSize: 11, color: '#10b981', marginTop: 4, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
+                                            <CheckCircle2 size={12} />
+                                            <span>Age: {Math.floor((new Date() - new Date(form.birthDate)) / (365.25 * 24 * 3600 * 1000))} years</span>
                                         </div>
                                     )}
                                 </div>
@@ -464,38 +459,23 @@ export default function CreateProfile() {
                                 </div>
                             </div>
 
-                            {/* Phone + Email */}
                             <div className="cp-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-
-                                {/* ✅ Phone with +91 validation */}
                                 <div data-err={!!errors.phone}>
                                     <label style={lbl}>Phone *</label>
-                                    {/* If pre-filled from signup — show read-only with +91 */}
-                                    {form.phone && !errors.phone && !( (form.phone.replace(/^\+91\s?/, '').replace(/\D/g,'').length < 10) ) ? (
-                                        // Read-only display once valid number from localStorage
-                                        <IndianPhoneInput
-                                            value={form.phone}
-                                            onChange={val => setField('phone', val)}
-                                            error={errors.phone}
-                                            readOnly={false}
-                                        />
-                                    ) : (
-                                        <IndianPhoneInput
-                                            value={form.phone}
-                                            onChange={val => setField('phone', val)}
-                                            error={errors.phone}
-                                            readOnly={false}
-                                        />
-                                    )}
+                                    <IndianPhoneInput
+                                        value={form.phone}
+                                        onChange={val => setField('phone', val)}
+                                        error={errors.phone}
+                                        readOnly={false}
+                                    />
                                     <ErrMsg msg={errors.phone} />
                                 </div>
 
-                                {/* Email — always read-only */}
                                 <div>
                                     <label style={lbl}>
                                         Email{' '}
                                         {form.email && (
-                                            <span style={{ marginLeft: 6, background: '#dcfce7', color: '#15803d', padding: '1px 7px', borderRadius: 20, fontSize: 9, fontWeight: 700, textTransform: 'none' }}>
+                                            <span style={{ marginLeft: 6, background: '#ccfbf1', color: '#0f766e', padding: '1px 7px', borderRadius: 20, fontSize: 9, fontWeight: 700, textTransform: 'none' }}>
                                                 from account
                                             </span>
                                         )}
@@ -506,12 +486,9 @@ export default function CreateProfile() {
                         </div>
                     )}
 
-                    {/* ════════════════════════
-                        STEP 2 — Address
-                    ════════════════════════ */}
+                    {/* STEP 2 — Address */}
                     {step === 2 && (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-
                             <div data-err={!!errors.address}>
                                 <label style={lbl}>Street Address *</label>
                                 <input className="cp-input-focus" style={inp(!!errors.address)}
@@ -523,13 +500,13 @@ export default function CreateProfile() {
                                 <div data-err={!!errors.city}>
                                     <label style={lbl}>City *</label>
                                     <input className="cp-input-focus" style={inp(!!errors.city)}
-                                           placeholder="Charkhi Dadri" value={form.city} onChange={set('city')} />
+                                           placeholder="New Delhi" value={form.city} onChange={set('city')} />
                                     <ErrMsg msg={errors.city} />
                                 </div>
                                 <div data-err={!!errors.state}>
                                     <label style={lbl}>State *</label>
                                     <input className="cp-input-focus" style={inp(!!errors.state)}
-                                           placeholder="Haryana" value={form.state} onChange={set('state')} />
+                                           placeholder="Delhi" value={form.state} onChange={set('state')} />
                                     <ErrMsg msg={errors.state} />
                                 </div>
                             </div>
@@ -537,16 +514,17 @@ export default function CreateProfile() {
                             <div data-err={!!errors.pincode}>
                                 <label style={lbl}>Pincode *</label>
                                 <input className="cp-input-focus" style={inp(!!errors.pincode)}
-                                       placeholder="127306" maxLength={6}
+                                       placeholder="110001" maxLength={6}
                                        value={form.pincode}
                                        onChange={e => setField('pincode', e.target.value.replace(/\D/g, ''))} />
                                 <ErrMsg msg={errors.pincode} />
                             </div>
 
-                            {/* Emergency Contact */}
-                            <div style={{ background: '#f9fafb', borderRadius: 12, padding: 16, border: '1px solid #f3f4f6' }}>
-                                <div style={{ fontSize: 11, fontWeight: 700, color: '#374151', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
-                                    🚨 Emergency Contact <span style={{ fontWeight: 400, color: '#9ca3af' }}>(optional)</span>
+                            <div style={{ background: '#f8fafc', borderRadius: 12, padding: 16, border: '1px solid #e2e8f0' }}>
+                                <div style={{ fontSize: 11, fontWeight: 700, color: '#0f172a', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+                                    <Phone size={14} color="#0d9488" />
+                                    <span>Emergency Contact</span> 
+                                    <span style={{ fontWeight: 400, color: '#64748b' }}>(optional)</span>
                                 </div>
                                 <div className="cp-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                                     <div data-err={!!errors.emergencyContactName}>
@@ -558,7 +536,6 @@ export default function CreateProfile() {
                                         <ErrMsg msg={errors.emergencyContactName} />
                                     </div>
 
-                                    {/* ✅ Emergency phone also gets +91 validation */}
                                     <div data-err={!!errors.emergencyContactPhone}>
                                         <label style={lbl}>Contact Phone</label>
                                         <IndianPhoneInput
@@ -566,20 +543,15 @@ export default function CreateProfile() {
                                             onChange={val => setField('emergencyContactPhone', val)}
                                             error={errors.emergencyContactPhone}
                                         />
-                                        {/* ErrMsg already shown inside IndianPhoneInput via helper text */}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     )}
 
-                    {/* ════════════════════════
-                        STEP 3 — Health Info
-                    ════════════════════════ */}
+                    {/* STEP 3 — Health Info */}
                     {step === 3 && (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-
-                            {/* Blood Group */}
                             <div>
                                 <label style={lbl}>Blood Group</label>
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 8, marginTop: 4 }}>
@@ -591,9 +563,9 @@ export default function CreateProfile() {
                                             style={{
                                                 padding: '10px 6px', borderRadius: 9, fontSize: 13, fontWeight: 700,
                                                 cursor: 'pointer', transition: 'all .15s',
-                                                border:      form.bloodGroup === bg ? '2px solid #0a4f3a' : '1.5px solid #e5e7eb',
-                                                background:  form.bloodGroup === bg ? '#E1F5EE' : '#fff',
-                                                color:       form.bloodGroup === bg ? '#0a4f3a' : '#374151',
+                                                border:      form.bloodGroup === bg ? '2px solid #0d9488' : '1.5px solid #cbd5e1',
+                                                background:  form.bloodGroup === bg ? '#f0fdf4' : '#fff',
+                                                color:       form.bloodGroup === bg ? '#0d9488' : '#334155',
                                             }}
                                         >
                                             {bloodGroupLabels[bg]}
@@ -602,7 +574,6 @@ export default function CreateProfile() {
                                 </div>
                             </div>
 
-                            {/* Height + Weight */}
                             <div className="cp-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                                 <div>
                                     <label style={lbl}>Height (cm)</label>
@@ -618,32 +589,33 @@ export default function CreateProfile() {
                                 </div>
                             </div>
 
-                            {/* BMI */}
                             {bmi && (
-                                <div style={{ background: '#E1F5EE', borderRadius: 12, padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <div style={{ background: '#f0fdf4', borderRadius: 12, padding: '12px 16px', border: '1px solid #99f6e4', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <div>
-                                        <div style={{ fontSize: 10, color: '#065f46', fontWeight: 600, marginBottom: 2 }}>BMI (Body Mass Index)</div>
+                                        <div style={{ fontSize: 10, color: '#0f766e', fontWeight: 600, marginBottom: 2 }}>BMI (Body Mass Index)</div>
                                         <div style={{ fontSize: 22, fontWeight: 800, color: bmiColor }}>{bmi}</div>
                                     </div>
-                                    <div style={{ fontSize: 13, fontWeight: 600, color: bmiColor }}>{bmiLabel}</div>
+                                    <div style={{ fontSize: 13, fontWeight: 700, color: bmiColor }}>{bmiLabel}</div>
                                 </div>
                             )}
 
-                            <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 10, padding: '10px 14px', fontSize: 11, color: '#92400e', lineHeight: 1.6 }}>
-                                💡 Health info is optional but helps doctors give better care. You can update this anytime from your profile.
+                            <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 10, padding: '10px 14px', fontSize: 11, color: '#92400e', lineHeight: 1.6, display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                                <Lightbulb size={16} color="#d97706" style={{ flexShrink: 0, marginTop: 1 }} />
+                                <span>Health info is optional but helps doctors give better care. You can update this anytime from your profile.</span>
                             </div>
                         </div>
                     )}
 
-                    {/* ── NAV BUTTONS ── */}
-                    <div style={{ display: 'flex', gap: 10, marginTop: 24, paddingTop: 16, borderTop: '1px solid #f3f4f6' }}>
+                    {/* NAV BUTTONS */}
+                    <div style={{ display: 'flex', gap: 10, marginTop: 24, paddingTop: 16, borderTop: '1px solid #e2e8f0' }}>
                         {step > 1 && (
                             <button
                                 className="cp-btn-back"
                                 onClick={() => { setErrors({}); setStep(s => s - 1); window.scrollTo(0,0); }}
-                                style={{ flex: 1, padding: '12px', borderRadius: 10, border: '1.5px solid #e5e7eb', background: '#fff', fontSize: 13, fontWeight: 600, color: '#374151', cursor: 'pointer', transition: 'all .15s' }}
+                                style={{ flex: 1, padding: '12px', borderRadius: 10, border: '1.5px solid #cbd5e1', background: '#fff', fontSize: 13, fontWeight: 600, color: '#334155', cursor: 'pointer', transition: 'all .15s', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
                             >
-                                ← Back
+                                <ChevronLeft size={16} />
+                                <span>Back</span>
                             </button>
                         )}
 
@@ -651,30 +623,33 @@ export default function CreateProfile() {
                             <button
                                 className="cp-btn-next"
                                 onClick={nextStep}
-                                style={{ flex: 1, padding: '12px', borderRadius: 10, border: 'none', background: '#0a4f3a', fontSize: 13, fontWeight: 600, color: '#fff', cursor: 'pointer', transition: 'all .15s' }}
+                                style={{ flex: 1, padding: '12px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg, #0d9488 0%, #0f172a 100%)', fontSize: 13, fontWeight: 600, color: '#fff', cursor: 'pointer', transition: 'all .15s', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6, boxShadow: '0 4px 12px rgba(13,148,136,0.25)' }}
                             >
-                                Next →
+                                <span>Next</span>
+                                <ChevronRight size={16} />
                             </button>
                         ) : (
                             <button
                                 onClick={handleSubmit}
                                 disabled={loading}
-                                style={{ flex: 1, padding: '12px', borderRadius: 10, border: 'none', background: loading ? '#9ca3af' : '#0a4f3a', fontSize: 13, fontWeight: 600, color: '#fff', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background .15s' }}
+                                style={{ flex: 1, padding: '12px', borderRadius: 10, border: 'none', background: loading ? '#94a3b8' : 'linear-gradient(135deg, #0d9488 0%, #0f172a 100%)', fontSize: 13, fontWeight: 600, color: '#fff', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background .15s', boxShadow: '0 4px 12px rgba(13,148,136,0.25)' }}
                             >
                                 {loading ? (
                                     <>
-                                        <svg style={{ width: 16, height: 16, animation: 'spin 1s linear infinite' }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                            <circle style={{ opacity: .25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                                            <path style={{ opacity: .75 }} fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
-                                        </svg>
-                                        Saving...
+                                        <Loader2 size={16} className="animate-spin" />
+                                        <span>Saving...</span>
                                     </>
-                                ) : '✓ Save Profile'}
+                                ) : (
+                                    <>
+                                        <Check size={16} />
+                                        <span>Save Profile</span>
+                                    </>
+                                )}
                             </button>
                         )}
                     </div>
 
-                    <p style={{ textAlign: 'center', fontSize: 11, color: '#9ca3af', marginTop: 12 }}>
+                    <p style={{ textAlign: 'center', fontSize: 11, color: '#64748b', marginTop: 12 }}>
                         Step {step} of 3 — You can update this later from your profile
                     </p>
                 </div>

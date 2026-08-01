@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate }         from 'react-router-dom';
 import api                     from '../../api/axios';
+import Pagination              from '../../components/Pagination';
+import { Search, Stethoscope, Clock, Award, Calendar, ChevronRight } from 'lucide-react';
 
 export default function FindDoctors() {
     const navigate = useNavigate();
@@ -286,50 +288,16 @@ export default function FindDoctors() {
                         </div>
 
                         {/* pagination */}
-                        {totalPages > 1 && (
-                            <div style={{
-                                display:'flex', justifyContent:'center',
-                                alignItems:'center', gap:'6px', marginTop:'8px',
-                            }}>
-                                <button
-                                    disabled={page === 0}
-                                    onClick={() => setPage(p => p - 1)}
-                                    style={{
-                                        padding:'6px 12px', borderRadius:'8px',
-                                        border:'1px solid #e5e7eb', background:'#fff',
-                                        fontSize:'12px',
-                                        cursor: page === 0 ? 'not-allowed' : 'pointer',
-                                        color: page === 0 ? '#d1d5db' : '#374151',
-                                    }}
-                                >
-                                    ← Prev
-                                </button>
-                                {Array.from({ length: totalPages }, (_, i) => (
-                                    <button key={i} onClick={() => setPage(i)} style={{
-                                        width:'32px', height:'32px', borderRadius:'50%',
-                                        border: page === i ? 'none' : '1px solid #e5e7eb',
-                                        background: page === i ? '#0a4f3a' : '#fff',
-                                        color: page === i ? '#fff' : '#6b7280',
-                                        fontSize:'12px', fontWeight:600, cursor:'pointer',
-                                    }}>
-                                        {i + 1}
-                                    </button>
-                                ))}
-                                <button
-                                    disabled={page === totalPages - 1}
-                                    onClick={() => setPage(p => p + 1)}
-                                    style={{
-                                        padding:'6px 12px', borderRadius:'8px',
-                                        border:'1px solid #e5e7eb', background:'#fff',
-                                        fontSize:'12px',
-                                        cursor: page === totalPages-1 ? 'not-allowed' : 'pointer',
-                                        color: page === totalPages-1 ? '#d1d5db' : '#374151',
-                                    }}
-                                >
-                                    Next →
-                                </button>
-                            </div>
-                        )}
+                        <div style={{ marginTop: 16, background: '#fff', borderRadius: 12, border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+                            <Pagination
+                                currentPage={page + 1}
+                                totalPages={totalPages}
+                                totalItems={totalDoctors}
+                                pageSize={9}
+                                onPageChange={(p) => setPage(p - 1)}
+                                itemLabel="doctors"
+                            />
+                        </div>
                     </>
                 )}
             </div>
