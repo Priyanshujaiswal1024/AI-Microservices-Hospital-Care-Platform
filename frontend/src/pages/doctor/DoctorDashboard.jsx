@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import api from '../../api/axios';
+import { Calendar, Loader2 } from 'lucide-react';
 
 function WeeklyChart({ data, color = '#60a5fa' }) {
     const ref = useRef();
@@ -329,12 +330,12 @@ export default function DoctorDashboard() {
                         ))}
                     </div>
                     {loading ? (
-                        <div style={{ padding:'48px', textAlign:'center', color:'#94a3b8', fontSize:'13px' }}>
-                            <div style={{ fontSize:'28px', marginBottom:'10px' }}>⏳</div>Loading appointments...
+                        <div style={{ padding:'48px', textAlign:'center', color:'#94a3b8', display:'flex', flexDirection:'column', alignItems:'center', gap:10 }}>
+                            <Loader2 size={22} color="#94a3b8" style={{ animation:'spin 1s linear infinite' }}/><span style={{ fontSize:13 }}>Loading appointments...</span>
                         </div>
                     ) : recentAppts.length === 0 ? (
                         <div style={{ padding:'56px 20px', textAlign:'center' }}>
-                            <div style={{ fontSize:'36px', marginBottom:'10px' }}>🗓️</div>
+                            <Calendar size={34} color="#e2e8f0" style={{ marginBottom:10, display:'block', margin:'0 auto 10px' }}/>
                             <div style={{ fontSize:'13px', fontWeight:600, color:'#374151' }}>No appointments yet</div>
                         </div>
                     ) : recentAppts.map((appt, idx) => {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
+import { CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function CreateMedicalRecord() {
     const { appointmentId } = useParams();
@@ -61,7 +62,7 @@ export default function CreateMedicalRecord() {
     if (success) return (
         <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', padding:'24px' }}>
             <div style={{ background:'#fff', borderRadius:'16px', padding:'40px', maxWidth:'400px', width:'100%', textAlign:'center', border:'1px solid #f0f0f0' }}>
-                <div style={{ width:'64px', height:'64px', borderRadius:'50%', background:'#f0fdf4', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'28px', margin:'0 auto 16px' }}>📋</div>
+                <div style={{ width:'64px', height:'64px', borderRadius:'50%', background:'#f0fdf4', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px', border:'2px solid #bbf7d0' }}><CheckCircle2 size={28} color="#16a34a"/></div>
                 <div style={{ fontSize:'18px', fontWeight:700, color:'#166534', marginBottom:'8px' }}>Medical Record Created!</div>
                 <p style={{ fontSize:'12px', color:'#6b7280', marginBottom:'20px', lineHeight:1.7 }}>
                     Record saved for appointment #{appointmentId}.

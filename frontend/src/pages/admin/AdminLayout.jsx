@@ -1,7 +1,7 @@
+import { useState, useEffect } from 'react';
 import { NavLink, useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import api from '../../api/axios';
-import { useState, useEffect, useRef } from 'react';
 import {
     LayoutDashboard,
     Stethoscope,
@@ -14,8 +14,26 @@ import {
     LogOut,
     Menu,
     X,
-    Shield
+    Shield,
+    ChevronRight
 } from 'lucide-react';
+
+/* ── Shared Brand Logo SVG ─────────────────────────────────────────── */
+function Logo({ size = 36 }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="40" height="40" rx="10" fill="url(#adminGrad)"/>
+            <rect x="18" y="10" width="4" height="20" rx="2" fill="white"/>
+            <rect x="10" y="18" width="20" height="4" rx="2" fill="white"/>
+            <defs>
+                <linearGradient id="adminGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#0f172a"/>
+                    <stop offset="100%" stopColor="#0284c7"/>
+                </linearGradient>
+            </defs>
+        </svg>
+    );
+}
 
 const navItems = [
     {
@@ -52,23 +70,9 @@ export default function AdminLayout() {
     const navigate  = useNavigate();
     const location  = useLocation();
     const [open, setOpen] = useState(false);
-    const sidebarRef = useRef();
+    const sidebarRef = { current: null };
 
     useEffect(() => { setOpen(false); }, [location.pathname]);
-
-    useEffect(() => {
-        function handler(e) {
-            if (open && sidebarRef.current && !sidebarRef.current.contains(e.target)) {
-                setOpen(false);
-            }
-        }
-        document.addEventListener('mousedown', handler);
-        document.addEventListener('touchstart', handler);
-        return () => {
-            document.removeEventListener('mousedown', handler);
-            document.removeEventListener('touchstart', handler);
-        };
-    }, [open]);
 
     useEffect(() => {
         if (open) document.body.style.overflow = 'hidden';
@@ -88,72 +92,80 @@ export default function AdminLayout() {
     const initials = user?.sub?.slice(0, 2).toUpperCase() || 'AD';
     const page = getPageLabel(location.pathname);
     const PageIcon = page.icon;
+    const email = user?.sub || 'Admin';
 
     return (
-        <div style={{ display:'flex', height:'100vh', overflow:'hidden', background:'#f8fafc', fontFamily:"'Inter', system-ui, sans-serif" }}>
+        <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: '#f1f5f9', fontFamily: "'Inter', system-ui, sans-serif" }}>
             <style>{`
-                .anl:hover { background:#f1f5f9!important; color:#0f172a!important; }
-                .alo:hover { background:#fef2f2!important; }
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+                .anl { transition: all .15s ease; }
+                .anl:hover { background: #f8fafc !important; color: #0f172a !important; }
+                .al-logout:hover { background: #fef2f2 !important; }
+                .al-nav-item:hover { background: #f8fafc !important; }
 
                 .mob-topbar {
-                    display:none;
-                    position:fixed; top:0; left:0; right:0; z-index:200;
-                    height:56px; background:#fff; border-bottom:1px solid #e2e8f0;
-                    align-items:center; justify-content:space-between;
-                    padding:0 16px; box-shadow:0 1px 8px rgba(0,0,0,.04);
+                    display: none;
+                    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+                    height: 58px; background: #fff;
+                    border-bottom: 1px solid #e2e8f0;
+                    align-items: center; justify-content: space-between;
+                    padding: 0 16px;
+                    box-shadow: 0 1px 10px rgba(0,0,0,.06);
                 }
-
                 .sidebar-overlay {
-                    display:none; position:fixed; inset:0; z-index:299;
-                    background:rgba(15,23,42,.45); backdrop-filter:blur(2px);
+                    display: none; position: fixed; inset: 0; z-index: 299;
+                    background: rgba(15,23,42,.5); backdrop-filter: blur(3px);
                 }
-
                 .admin-sidebar {
-                    width:220px; background:#fff; border-right:1px solid #e2e8f0;
-                    display:flex; flex-direction:column; flex-shrink:0;
-                    box-shadow:2px 0 12px rgba(0,0,0,.03);
-                    transition:transform .25s cubic-bezier(.4,0,.2,1);
-                    z-index:300;
+                    width: 232px;
+                    background: #fff;
+                    border-right: 1px solid #e2e8f0;
+                    display: flex; flex-direction: column; flex-shrink: 0;
+                    box-shadow: 4px 0 20px rgba(0,0,0,.04);
+                    transition: transform .25s cubic-bezier(.4,0,.2,1);
+                    z-index: 300;
+                    position: relative;
                 }
-
                 .admin-content {
-                    flex:1; overflow-y:auto; display:flex;
-                    flex-direction:column; min-width:0;
+                    flex: 1; overflow-y: auto; display: flex;
+                    flex-direction: column; min-width: 0;
                 }
-
-                @media (max-width:768px) {
-                    .mob-topbar { display:flex!important; }
+                @media (max-width: 768px) {
+                    .mob-topbar { display: flex !important; }
                     .admin-sidebar {
-                        position:fixed; top:0; left:0; bottom:0;
-                        transform:translateX(-100%);
-                        box-shadow:4px 0 24px rgba(0,0,0,.15);
+                        position: fixed; top: 0; left: 0; bottom: 0;
+                        transform: translateX(-100%);
+                        box-shadow: 8px 0 32px rgba(0,0,0,.18);
                     }
-                    .admin-sidebar.open { transform:translateX(0); }
-                    .sidebar-overlay.open { display:block!important; }
-                    .admin-content { padding-top:56px; }
+                    .admin-sidebar.open { transform: translateX(0); }
+                    .sidebar-overlay.open { display: block !important; }
+                    .admin-content { padding-top: 58px; }
                 }
             `}</style>
 
             {/* ── Mobile Top Bar ── */}
             <div className="mob-topbar">
-                <div style={{ display:'flex', alignItems:'center', gap:'12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <button
                         onClick={() => setOpen(v => !v)}
-                        style={{ background:'none', border:'none', cursor:'pointer', padding:'4px', color:'#334155' }}
-                        aria-label="Toggle menu"
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 6, color: '#334155', borderRadius: 8, display: 'flex' }}
                     >
                         <Menu size={22} />
                     </button>
-                    <div style={{ display:'flex', alignItems:'center', gap:'8px' }}>
-                        <div style={{ width:'28px', height:'28px', background:'linear-gradient(135deg,#0f172a,#0284c7)', borderRadius:'7px', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:'14px', fontWeight:800 }}>P</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+                        <Logo size={30} />
                         <div>
-                            <div style={{ fontSize:'14px', fontWeight:700, color:'#0f172a', lineHeight:1 }}>Priyansh Care</div>
+                            <div style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', lineHeight: 1 }}>Priyansh Care</div>
+                            <div style={{ fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '.08em' }}>Admin Portal</div>
                         </div>
                     </div>
                 </div>
-                <div style={{ display:'flex', alignItems:'center', gap:'8px' }}>
-                    <PageIcon size={16} color="#0f172a" />
-                    <span style={{ fontSize:'12px', fontWeight:600, color:'#334155' }}>{page.label}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, padding: '5px 10px' }}>
+                        <PageIcon size={14} color="#0284c7" />
+                        <span style={{ fontSize: 12, fontWeight: 600, color: '#334155' }}>{page.label}</span>
+                    </div>
                 </div>
             </div>
 
@@ -161,58 +173,64 @@ export default function AdminLayout() {
             <div className={`sidebar-overlay${open ? ' open' : ''}`} onClick={() => setOpen(false)}/>
 
             {/* ── Sidebar ── */}
-            <div ref={sidebarRef} className={`admin-sidebar${open ? ' open' : ''}`}>
+            <div ref={r => sidebarRef.current = r} className={`admin-sidebar${open ? ' open' : ''}`}>
+
+                {/* Gradient top accent line */}
+                <div style={{ height: 3, background: 'linear-gradient(90deg, #0f172a 0%, #0284c7 50%, #0d9488 100%)', flexShrink: 0 }} />
+
                 {/* Logo */}
-                <div style={{ padding:'18px 16px 14px', borderBottom:'1px solid #e2e8f0', display:'flex', alignItems:'center', gap:'10px' }}>
-                    <div style={{ width:'36px', height:'36px', background:'linear-gradient(135deg,#0f172a,#0284c7)', borderRadius:'10px', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:'18px', fontWeight:800, flexShrink:0, boxShadow:'0 2px 8px rgba(15,23,42,.25)' }}>P</div>
-                    <div>
-                        <div style={{ fontSize:'14px', fontWeight:700, color:'#0f172a', lineHeight:1.1 }}>Priyansh Care</div>
-                        <div style={{ fontSize:'9px', color:'#64748b', textTransform:'uppercase', letterSpacing:'.09em', marginTop:'2px', fontWeight:600 }}>Admin Portal</div>
+                <div style={{ padding: '16px 16px 12px', borderBottom: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', gap: 11, flexShrink: 0 }}>
+                    <Logo size={36} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 14, fontWeight: 800, color: '#0f172a', lineHeight: 1.1, letterSpacing: '-0.02em' }}>Priyansh Care</div>
+                        <div style={{ fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '.1em', marginTop: 2, fontWeight: 600 }}>Admin Portal</div>
                     </div>
                     <button
                         onClick={() => setOpen(false)}
-                        style={{ marginLeft:'auto', display:'none', width:'28px', height:'28px', borderRadius:'7px', border:'none', background:'#f1f5f9', color:'#64748b', cursor:'pointer', alignItems:'center', justifyContent:'center', flexShrink:0 }}
+                        style={{ display: 'none', width: 28, height: 28, borderRadius: 7, border: 'none', background: '#f1f5f9', color: '#64748b', cursor: 'pointer', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
                         className="mob-close-btn"
                     >
-                        <X size={16} />
+                        <X size={15} />
                     </button>
                 </div>
 
-                {/* User info */}
-                <div style={{ padding:'12px 14px', borderBottom:'1px solid #e2e8f0', display:'flex', alignItems:'center', gap:'10px', background:'#f8fafc' }}>
-                    <div style={{ width:'34px', height:'34px', borderRadius:'10px', background:'#e2e8f0', color:'#0f172a', fontSize:'12px', fontWeight:800, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, border:'1px solid #cbd5e1' }}>{initials}</div>
-                    <div style={{ minWidth:0 }}>
-                        <div style={{ fontSize:'12px', fontWeight:600, color:'#0f172a', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{user?.sub || 'Admin'}</div>
-                        <div style={{ fontSize:'10px', color:'#0284c7', fontWeight:600, display:'flex', alignItems:'center', gap:'4px', marginTop:'1px' }}>
-                            <span style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#10b981', display:'inline-block' }}/>
-                            Online · System Admin
+                {/* User info card */}
+                <div style={{ margin: '10px 10px 0', padding: '10px 12px', borderRadius: 10, background: 'linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%)', border: '1px solid #e0f2fe', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #0f172a, #0284c7)', color: '#fff', fontSize: 13, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 2px 8px rgba(2,132,199,.25)', border: '1.5px solid rgba(255,255,255,.8)' }}>{initials}</div>
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: '#0f172a', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{email}</div>
+                        <div style={{ fontSize: 10, color: '#0284c7', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4, marginTop: 2 }}>
+                            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 0 2px rgba(16,185,129,.2)' }}/>
+                            System Admin
                         </div>
                     </div>
                 </div>
 
                 {/* Nav */}
-                <div style={{ padding:'10px 8px', flex:1, overflowY:'auto' }}>
+                <div style={{ padding: '12px 8px', flex: 1, overflowY: 'auto' }}>
                     {navItems.map(group => (
-                        <div key={group.section} style={{ marginBottom:'6px' }}>
-                            <div style={{ fontSize:'9px', fontWeight:700, color:'#94a3b8', letterSpacing:'.12em', textTransform:'uppercase', padding:'8px 8px 4px' }}>{group.section}</div>
+                        <div key={group.section} style={{ marginBottom: 8 }}>
+                            <div style={{ fontSize: 9, fontWeight: 700, color: '#94a3b8', letterSpacing: '.14em', textTransform: 'uppercase', padding: '6px 10px 4px' }}>{group.section}</div>
                             {group.items.map(item => {
                                 const ItemIcon = item.icon;
                                 return (
-                                    <NavLink key={item.to} to={item.to} className="anl"
-                                             style={({ isActive }) => ({
-                                                 display:'flex', alignItems:'center', gap:'9px',
-                                                 padding:'8px 10px', borderRadius:'9px',
-                                                 fontSize:'12px', fontWeight: isActive ? 700 : 500,
-                                                 color: isActive ? '#0f172a' : '#475569',
-                                                 background: isActive ? '#f1f5f9' : 'transparent',
-                                                 textDecoration:'none', marginBottom:'2px',
-                                                 transition:'all .15s',
-                                                 borderLeft: isActive ? '3px solid #0f172a' : '3px solid transparent',
-                                             })}>
+                                    <NavLink key={item.to} to={item.to}
+                                        className="anl"
+                                        style={({ isActive }) => ({
+                                            display: 'flex', alignItems: 'center', gap: 10,
+                                            padding: '8px 10px', borderRadius: 9,
+                                            fontSize: 12.5, fontWeight: isActive ? 700 : 500,
+                                            color: isActive ? '#0284c7' : '#475569',
+                                            background: isActive ? 'linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%)' : 'transparent',
+                                            textDecoration: 'none', marginBottom: 2,
+                                            borderLeft: isActive ? '3px solid #0284c7' : '3px solid transparent',
+                                            transition: 'all .15s',
+                                            boxShadow: isActive ? '0 1px 4px rgba(2,132,199,.1)' : 'none',
+                                        })}>
                                         <ItemIcon size={16} style={{ flexShrink: 0 }} />
-                                        <span style={{ flex:1 }}>{item.label}</span>
+                                        <span style={{ flex: 1 }}>{item.label}</span>
                                         {item.label === 'Dashboard' && (
-                                            <span style={{ fontSize:'9px', background:'#e2e8f0', color:'#0f172a', padding:'1px 5px', borderRadius:'4px', fontWeight:700 }}>Home</span>
+                                            <span style={{ fontSize: 9, background: 'linear-gradient(135deg, #0f172a, #0284c7)', color: '#fff', padding: '2px 6px', borderRadius: 5, fontWeight: 700 }}>Home</span>
                                         )}
                                     </NavLink>
                                 );
@@ -222,11 +240,12 @@ export default function AdminLayout() {
                 </div>
 
                 {/* Logout */}
-                <div style={{ padding:'10px 8px 16px', borderTop:'1px solid #e2e8f0' }}>
-                    <button className="alo" onClick={handleLogout}
-                            style={{ display:'flex', alignItems:'center', gap:'8px', padding:'8px 10px', borderRadius:'9px', fontSize:'12px', fontWeight:600, color:'#ef4444', cursor:'pointer', border:'none', background:'none', width:'100%', transition:'background .15s' }}>
+                <div style={{ padding: '8px 8px 14px', borderTop: '1px solid #f1f5f9' }}>
+                    <button className="al-logout" onClick={handleLogout}
+                        style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 10px', borderRadius: 9, fontSize: 12.5, fontWeight: 600, color: '#ef4444', cursor: 'pointer', border: 'none', background: 'none', width: '100%', transition: 'background .15s' }}>
                         <LogOut size={16} />
-                        <span>Logout</span>
+                        <span>Sign Out</span>
+                        <ChevronRight size={14} style={{ marginLeft: 'auto', opacity: .5 }} />
                     </button>
                 </div>
             </div>
@@ -237,8 +256,8 @@ export default function AdminLayout() {
             </div>
 
             <style>{`
-                @media (max-width:768px) {
-                    .mob-close-btn { display:flex!important; }
+                @media (max-width: 768px) {
+                    .mob-close-btn { display: flex !important; }
                 }
             `}</style>
         </div>

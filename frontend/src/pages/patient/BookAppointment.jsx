@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
+import { CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 
 export default function BookAppointment() {
     const { doctorId } = useParams();
@@ -63,11 +64,7 @@ export default function BookAppointment() {
                 maxWidth:'400px', width:'100%', textAlign:'center',
                 border:'1px solid #f0f0f0',
             }}>
-                <div style={{
-                    width:'64px', height:'64px', borderRadius:'50%',
-                    background:'#E1F5EE', display:'flex', alignItems:'center',
-                    justifyContent:'center', fontSize:'28px', margin:'0 auto 16px',
-                }}>✅</div>
+                <div style={{ width:'64px', height:'64px', borderRadius:'50%', background:'#f0fdf4', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px', border:'2px solid #bbf7d0' }}><CheckCircle2 size={28} color="#16a34a"/></div>
                 <div style={{
                     fontSize:'20px', fontWeight:700, color:'#0a4f3a', marginBottom:'8px',
                     fontFamily:"'Playfair Display', serif",

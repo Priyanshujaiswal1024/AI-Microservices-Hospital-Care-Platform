@@ -1,5 +1,22 @@
 import { Calendar, Pill, ShieldCheck, CheckCircle2, Lock, Smartphone, KeyRound, Mail, RefreshCw, Clock } from 'lucide-react';
 
+/* ── SVG Medical Cross Logo ── */
+function Logo({ size = 40 }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="40" height="40" rx="10" fill="url(#authGrad)"/>
+            <rect x="18" y="10" width="4" height="20" rx="2" fill="white"/>
+            <rect x="10" y="18" width="20" height="4" rx="2" fill="white"/>
+            <defs>
+                <linearGradient id="authGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#0d9488"/>
+                    <stop offset="100%" stopColor="#0f172a"/>
+                </linearGradient>
+            </defs>
+        </svg>
+    );
+}
+
 const features = {
     login: [
         { icon: Calendar, text: 'Book appointments with top specialists' },
@@ -36,9 +53,9 @@ export default function AuthLayout({ variant = 'login', children }) {
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4"
-             style={{ background: '#f8fafc' }}>
+             style={{ background: 'linear-gradient(135deg, #f8fafc 0%, #f0f9ff 50%, #f0fdf4 100%)' }}>
             <div className="flex w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl border border-slate-200/80"
-                 style={{ minHeight: '580px', boxShadow: '0 25px 50px -12px rgba(15, 23, 42, 0.15)' }}>
+                 style={{ minHeight: '580px', boxShadow: '0 25px 60px -12px rgba(15, 23, 42, 0.18)' }}>
 
                 {/* ── LEFT PANEL ── */}
                 <div className="relative flex flex-col justify-between p-10 overflow-hidden"
@@ -51,23 +68,22 @@ export default function AuthLayout({ variant = 'login', children }) {
                     <div className="absolute rounded-full"
                          style={{ bottom: '-80px', left: '-48px', width: '288px', height: '288px',
                              background: 'rgba(255,255,255,.05)' }} />
+                    <div className="absolute rounded-full"
+                         style={{ top: '50%', right: '-20px', width: '100px', height: '100px',
+                             background: 'rgba(13,148,136,.15)' }} />
 
                     {/* top section */}
                     <div className="relative z-10">
-                        {/* logo */}
+                        {/* SVG Logo */}
                         <div className="flex items-center gap-3 mb-12">
-                            <div className="w-11 h-11 rounded-xl flex items-center justify-center font-black text-xl text-white shadow-lg"
-                                 style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0284c7 100%)',
-                                     border: '1px solid rgba(255,255,255,.2)' }}>
-                                P
-                            </div>
+                            <Logo size={42} />
                             <div>
                                 <div className="text-white font-bold text-lg leading-tight tracking-tight">
                                     Priyansh Care
                                 </div>
                                 <div className="text-xs mt-0.5 tracking-widest uppercase font-medium"
                                      style={{ color: 'rgba(255,255,255,.55)' }}>
-                                    Hospital Care
+                                    Hospital Portal
                                 </div>
                             </div>
                         </div>

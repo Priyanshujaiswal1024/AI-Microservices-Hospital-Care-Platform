@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
+import { Pill, Search, Info, AlertCircle } from 'lucide-react';
 
 export default function AddPrescription() {
     const { appointmentId } = useParams();
@@ -118,7 +119,7 @@ export default function AddPrescription() {
             <div style={{ background:'linear-gradient(135deg,#0f3460,#185FA5)', padding:'16px 24px', display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0 }}>
                 <div>
                     <div style={{ fontSize:'10px', color:'rgba(255,255,255,.5)', fontWeight:600, letterSpacing:'.08em', textTransform:'uppercase', marginBottom:'3px' }}>Patient Care</div>
-                    <div style={{ fontSize:'18px', fontWeight:700, color:'#fff', fontFamily:"'Playfair Display',serif" }}>💊 Write Prescription</div>
+                    <div style={{ fontSize:'18px', fontWeight:700, color:'#fff', fontFamily:"'Playfair Display',serif", display:'flex', alignItems:'center', gap:8 }}><Pill size={18}/>Write Prescription</div>
                     <div style={{ fontSize:'11px', color:'rgba(255,255,255,.55)', marginTop:'2px' }}>Appointment #{appointmentId}</div>
                 </div>
                 <button onClick={() => navigate('/doctor/appointments')} style={{ padding:'8px 18px', borderRadius:'9px', border:'1px solid rgba(255,255,255,.25)', background:'rgba(255,255,255,.12)', color:'#fff', fontSize:'12px', fontWeight:600, cursor:'pointer' }}>← Back</button>
@@ -126,19 +127,19 @@ export default function AddPrescription() {
 
             <div style={{ flex:1, overflowY:'auto', padding:'20px 24px' }}>
                 {error && (
-                    <div style={{ background:'#fef2f2', border:'1px solid #fecaca', color:'#dc2626', fontSize:'12px', borderRadius:'10px', padding:'10px 14px', marginBottom:'14px', display:'flex', alignItems:'center', gap:'8px' }}>⚠️ {error}</div>
+                    <div style={{ background:'#fef2f2', border:'1px solid #fecaca', color:'#dc2626', fontSize:'12px', borderRadius:'10px', padding:'10px 14px', marginBottom:'14px', display:'flex', alignItems:'center', gap:'8px' }}><AlertCircle size={14}/>{error}</div>
                 )}
 
                 {/* Info banner — remind doctor diagnosis goes in medical record */}
                 <div style={{ background:'#fffbeb', border:'1px solid #fde68a', borderRadius:'10px', padding:'10px 14px', marginBottom:'14px', fontSize:'11px', color:'#92400e', display:'flex', alignItems:'center', gap:'8px' }}>
-                    💡 <span>Only add <strong>medicines</strong> here. Diagnosis & notes go in the <strong>Medical Record</strong>.</span>
+                    <Info size={14}/> <span>Only add <strong>medicines</strong> here. Diagnosis & notes go in the <strong>Medical Record</strong>.</span>
                 </div>
 
                 <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'16px', height:'calc(100% - 80px)' }}>
 
                     {/* LEFT — Medicine Search */}
                     <div style={{ background:'#fff', border:'1px solid #e8edf2', borderRadius:'14px', padding:'18px', boxShadow:'0 1px 4px rgba(0,0,0,.04)' }}>
-                        <div style={{ fontSize:'10px', fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:'.08em', marginBottom:'14px' }}>🔍 Search & Add Medicines</div>
+                        <div style={{ fontSize:'10px', fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:'.08em', marginBottom:'14px', display:'flex', alignItems:'center', gap:5 }}><Search size={12}/>Search & Add Medicines</div>
                         <div style={{ position:'relative' }}>
                             <input
                                 className="med-inp" style={inp}
@@ -177,7 +178,7 @@ export default function AddPrescription() {
 
                         {selected.length === 0 ? (
                             <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', gap:'8px', color:'#cbd5e1', fontSize:'12px', textAlign:'center', padding:'20px' }}>
-                                <div style={{ fontSize:'40px' }}>💊</div>
+                                <Pill size={36} color="#e2e8f0" style={{ marginBottom:8 }}/>
                                 <div style={{ fontWeight:600, color:'#94a3b8' }}>No medicines added yet</div>
                                 <div style={{ fontSize:'11px' }}>Search and add from the left panel</div>
                             </div>
