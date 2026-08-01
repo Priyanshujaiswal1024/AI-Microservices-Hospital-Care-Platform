@@ -22,6 +22,14 @@ api.interceptors.response.use(
             config._retryCount < 3 &&
             (error.response?.status === 500 || !error.response); // 500 or network error
 
+        if (error.response?.status === 401) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userInfo');
+            if (window.location.pathname !== '/' && window.location.pathname !== '/login' && window.location.pathname !== '/oauth2/callback') {
+                window.location.href = '/?session_expired=true';
+            }
+        }
+
         if (shouldRetry) {
             config._retryCount += 1;
             const delay = config._retryCount * 3000; // 3s, 6s, 9s
