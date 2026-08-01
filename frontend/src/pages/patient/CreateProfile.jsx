@@ -2,19 +2,12 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
 import { 
-    CheckCircle2, 
-    XCircle, 
     AlertCircle, 
-    AlertTriangle, 
     ChevronLeft, 
     ChevronRight, 
     Check, 
     Lightbulb, 
     Phone, 
-    User, 
-    MapPin, 
-    Activity, 
-    Shield, 
     Loader2 
 } from 'lucide-react';
 
@@ -50,11 +43,8 @@ function IndianPhoneInput({ value, onChange, readOnly = false, error }) {
         helperText  = `${rem} more digit${rem !== 1 ? 's' : ''} needed`;
         helperColor = '#d97706';
     } else if (isTouched && raw.length === 10 && !/^[6-9]/.test(raw)) {
-        helperText  = 'Indian mobile must start with 6, 7, 8 or 9';
+        helperText  = 'Mobile number must start with 6, 7, 8 or 9';
         helperColor = '#ef4444';
-    } else if (isValid) {
-        helperText  = 'Valid Indian mobile number';
-        helperColor = '#10b981';
     } else if (!isTouched) {
         helperText  = 'Enter 10-digit Indian mobile number';
         helperColor = '#64748b';
@@ -69,13 +59,13 @@ function IndianPhoneInput({ value, onChange, readOnly = false, error }) {
         return (
             <div style={{
                 display: 'flex', borderRadius: '10px',
-                border: '1px solid #99f6e4', background: '#f0fdf4',
+                border: '1px solid #e2e8f0', background: '#f8fafc',
                 overflow: 'hidden',
             }}>
                 <div style={{
-                    padding: '10px 12px', background: '#ccfbf1',
-                    borderRight: '1px solid #99f6e4',
-                    fontSize: 13, fontWeight: 700, color: '#0f766e',
+                    padding: '10px 12px', background: '#f1f5f9',
+                    borderRight: '1px solid #e2e8f0',
+                    fontSize: 13, fontWeight: 700, color: '#0f172a',
                     display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0,
                 }}>
                     +91
@@ -134,22 +124,11 @@ function IndianPhoneInput({ value, onChange, readOnly = false, error }) {
                         letterSpacing: '.04em',
                     }}
                 />
-
-                {isTouched && (
-                    <div style={{
-                        padding: '10px 12px',
-                        display: 'flex', alignItems: 'center',
-                        flexShrink: 0,
-                    }}>
-                        {isValid ? <CheckCircle2 size={16} color="#10b981" /> : <XCircle size={16} color="#ef4444" />}
-                    </div>
-                )}
             </div>
 
             {helperText && (
                 <div style={{ fontSize: 11, marginTop: 4, color: helperColor, fontWeight: helperColor !== '#64748b' ? 600 : 400, lineHeight: 1.4, display: 'flex', alignItems: 'center', gap: 4 }}>
                     {helperColor === '#ef4444' && <AlertCircle size={12} />}
-                    {helperColor === '#10b981' && <CheckCircle2 size={12} />}
                     <span>{helperText}</span>
                 </div>
             )}
@@ -302,8 +281,8 @@ export default function CreateProfile() {
         fontFamily: 'Inter, system-ui, sans-serif', transition: 'border .15s', boxSizing: 'border-box',
     });
     const inpRO = {
-        ...inp(false), background: '#f0fdf4', color: '#334155',
-        border: '1px solid #99f6e4', cursor: 'not-allowed',
+        ...inp(false), background: '#f8fafc', color: '#475569',
+        border: '1px solid #cbd5e1', cursor: 'not-allowed',
     };
     const lbl = {
         fontSize: '11px', fontWeight: 600, color: '#475569',
@@ -364,7 +343,7 @@ export default function CreateProfile() {
                             <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '.08em', marginTop: 2 }}>Medical Portal</div>
                         </div>
                     </div>
-                    <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 4, tracking: '-0.02em' }}>Complete Your Profile</div>
+                    <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 4 }}>Complete Your Profile</div>
                     <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)' }}>This helps us provide better care for you</div>
 
                     {/* Step bar */}
@@ -435,12 +414,6 @@ export default function CreateProfile() {
                                         }}
                                     />
                                     <ErrMsg msg={errors.birthDate} />
-                                    {form.birthDate && !errors.birthDate && (
-                                        <div style={{ fontSize: 11, color: '#10b981', marginTop: 4, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
-                                            <CheckCircle2 size={12} />
-                                            <span>Age: {Math.floor((new Date() - new Date(form.birthDate)) / (365.25 * 24 * 3600 * 1000))} years</span>
-                                        </div>
-                                    )}
                                 </div>
                                 <div data-err={!!errors.gender}>
                                     <label style={lbl}>Gender *</label>
@@ -472,14 +445,7 @@ export default function CreateProfile() {
                                 </div>
 
                                 <div>
-                                    <label style={lbl}>
-                                        Email{' '}
-                                        {form.email && (
-                                            <span style={{ marginLeft: 6, background: '#ccfbf1', color: '#0f766e', padding: '1px 7px', borderRadius: 20, fontSize: 9, fontWeight: 700, textTransform: 'none' }}>
-                                                from account
-                                            </span>
-                                        )}
-                                    </label>
+                                    <label style={lbl}>Email</label>
                                     <input style={inpRO} value={form.email} readOnly placeholder="your@email.com" />
                                 </div>
                             </div>
@@ -648,10 +614,6 @@ export default function CreateProfile() {
                             </button>
                         )}
                     </div>
-
-                    <p style={{ textAlign: 'center', fontSize: 11, color: '#64748b', marginTop: 12 }}>
-                        Step {step} of 3 — You can update this later from your profile
-                    </p>
                 </div>
             </div>
         </div>

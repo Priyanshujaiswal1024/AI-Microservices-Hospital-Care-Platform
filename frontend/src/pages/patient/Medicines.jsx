@@ -1,13 +1,26 @@
 import { useState, useEffect } from 'react';
 import api from '../../api/axios';
+import { 
+    Pill, 
+    FlaskConical, 
+    Syringe, 
+    Droplet, 
+    Sparkles, 
+    Stethoscope, 
+    Search, 
+    X, 
+    CheckCircle2, 
+    AlertCircle, 
+    Loader2 
+} from 'lucide-react';
 
 const typeConfig = {
-    TABLET:    { icon: '💊', color: '#3b82f6', bg: '#eff6ff' },
-    CAPSULE:   { icon: '💉', color: '#8b5cf6', bg: '#f5f3ff' },
-    SYRUP:     { icon: '🍶', color: '#f59e0b', bg: '#fffbeb' },
-    INJECTION: { icon: '🩺', color: '#ef4444', bg: '#fef2f2' },
-    OINTMENT:  { icon: '🧴', color: '#10b981', bg: '#f0fdf4' },
-    DROPS:     { icon: '💧', color: '#06b6d4', bg: '#ecfeff' },
+    TABLET:    { icon: Pill,         color: '#0284c7', bg: '#f0f9ff' },
+    CAPSULE:   { icon: FlaskConical, color: '#7c3aed', bg: '#f5f3ff' },
+    SYRUP:     { icon: Droplet,      color: '#d97706', bg: '#fffbeb' },
+    INJECTION: { icon: Syringe,      color: '#dc2626', bg: '#fef2f2' },
+    OINTMENT:  { icon: Sparkles,     color: '#0d9488', bg: '#f0fdf4' },
+    DROPS:     { icon: Stethoscope,  color: '#0891b2', bg: '#ecfeff' },
 };
 
 export default function Medicines() {
@@ -15,9 +28,8 @@ export default function Medicines() {
     const [results, setResults]     = useState([]);
     const [loading, setLoading]     = useState(false);
     const [searched, setSearched]   = useState(false);
-    const [selected, setSelected]   = useState(null); // detail modal
+    const [selected, setSelected]   = useState(null);
 
-    // search on keystroke — debounced
     useEffect(() => {
         if (!query.trim()) { setResults([]); setSearched(false); return; }
         const timer = setTimeout(() => searchMedicines(query), 400);
@@ -31,7 +43,7 @@ export default function Medicines() {
             const { data } = await api.get('/medicines/search', {
                 params: { name },
             });
-            setResults(data);
+            setResults(data || []);
         } catch {
             setResults([]);
         } finally {
@@ -40,18 +52,18 @@ export default function Medicines() {
     }
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#f8fafc', fontFamily: "'Inter', system-ui, sans-serif" }}>
 
             {/* topbar */}
             <div style={{
-                background: '#fff', borderBottom: '1px solid #f0f0f0',
+                background: '#fff', borderBottom: '1px solid #e2e8f0',
                 padding: '12px 20px', position: 'sticky', top: 0, zIndex: 10,
             }}>
-                <div style={{ fontSize: '15px', fontWeight: 700, color: '#111' }}>
+                <div style={{ fontSize: '15px', fontWeight: 700, color: '#0f172a' }}>
                     Medicines
                 </div>
-                <div style={{ fontSize: '11px', color: '#9ca3af', marginTop: '1px' }}>
-                    Search medicines by name
+                <div style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>
+                    Search medicines by name or type
                 </div>
             </div>
 
@@ -59,28 +71,22 @@ export default function Medicines() {
 
                 {/* search box */}
                 <div style={{
-                    background: 'linear-gradient(120deg,#0a4f3a,#1D9E75)',
+                    background: 'linear-gradient(145deg, #0f172a 0%, #1e293b 60%, #0f766e 100%)',
                     borderRadius: '14px', padding: '24px',
-                    marginBottom: '20px', position: 'relative', overflow: 'hidden',
+                    marginBottom: '20px', position: 'relative', overflow: 'hidden', color: '#fff'
                 }}>
-                    {/* decorative circles */}
                     <div style={{
                         position: 'absolute', right: '-20px', top: '-20px',
                         width: '100px', height: '100px', borderRadius: '50%',
-                        background: 'rgba(255,255,255,.07)',
-                    }}/>
-                    <div style={{
-                        position: 'absolute', right: '80px', bottom: '-30px',
-                        width: '80px', height: '80px', borderRadius: '50%',
                         background: 'rgba(255,255,255,.05)',
                     }}/>
 
                     <div style={{
                         fontSize: '18px', fontWeight: 700, color: '#fff',
-                        marginBottom: '4px',
-                        fontFamily: "'Playfair Display', serif",
+                        marginBottom: '4px', display: 'flex', alignItems: 'center', gap: 8
                     }}>
-                        💊 Medicine Search
+                        <Search size={20} color="#2dd4bf" />
+                        <span>Medicine Search</span>
                     </div>
                     <div style={{
                         fontSize: '11px', color: 'rgba(255,255,255,.7)',
@@ -91,16 +97,16 @@ export default function Medicines() {
 
                     {/* search input */}
                     <div style={{ position: 'relative' }}>
-                        <span style={{
+                        <Search size={16} color="#64748b" style={{
                             position: 'absolute', left: '14px', top: '50%',
-                            transform: 'translateY(-50%)', fontSize: '15px',
-                        }}>🔍</span>
+                            transform: 'translateY(-50%)',
+                        }} />
                         <input
                             style={{
                                 width: '100%', borderRadius: '10px', border: 'none',
                                 padding: '12px 16px 12px 40px', fontSize: '13px',
-                                outline: 'none', fontFamily: 'Outfit, sans-serif',
-                                background: 'rgba(255,255,255,.95)',
+                                outline: 'none', fontFamily: 'Inter, system-ui, sans-serif',
+                                background: '#ffffff', color: '#0f172a',
                                 boxSizing: 'border-box',
                             }}
                             placeholder="Type medicine name... e.g. Paracetamol, Amoxicillin"
@@ -114,24 +120,26 @@ export default function Medicines() {
                                 style={{
                                     position: 'absolute', right: '12px', top: '50%',
                                     transform: 'translateY(-50%)',
-                                    background: '#e5e7eb', border: 'none',
+                                    background: '#f1f5f9', border: 'none',
                                     borderRadius: '50%', width: '22px', height: '22px',
-                                    cursor: 'pointer', fontSize: '11px', color: '#6b7280',
+                                    cursor: 'pointer', color: '#64748b',
                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 }}
-                            >✕</button>
+                            >
+                                <X size={12} />
+                            </button>
                         )}
                     </div>
 
                     {/* result count */}
                     {searched && !loading && (
                         <div style={{
-                            fontSize: '11px', color: 'rgba(255,255,255,.7)',
-                            marginTop: '10px',
+                            fontSize: '11px', color: 'rgba(255,255,255,.8)',
+                            marginTop: '10px', display: 'flex', alignItems: 'center', gap: 6
                         }}>
                             {results.length > 0
-                                ? `✅ ${results.length} medicine${results.length > 1 ? 's' : ''} found for "${query}"`
-                                : `❌ No medicines found for "${query}"`
+                                ? <><CheckCircle2 size={14} color="#2dd4bf" /> <span>{results.length} medicine{results.length > 1 ? 's' : ''} found for "{query}"</span></>
+                                : <><AlertCircle size={14} color="#fca5a5" /> <span>No medicines found for "{query}"</span></>
                             }
                         </div>
                     )}
@@ -144,7 +152,7 @@ export default function Medicines() {
                     }}>
                         {[...Array(6)].map((_, i) => (
                             <div key={i} style={{
-                                background: '#f3f4f6', borderRadius: '12px',
+                                background: '#e2e8f0', borderRadius: '12px',
                                 height: '120px', animation: 'pulse 1.5s infinite',
                             }}/>
                         ))}
@@ -155,39 +163,46 @@ export default function Medicines() {
                 {!loading && !searched && (
                     <div style={{
                         textAlign: 'center', padding: '50px 20px',
-                        color: '#9ca3af',
+                        color: '#64748b', background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0'
                     }}>
-                        <div style={{ fontSize: '50px', marginBottom: '12px' }}>💊</div>
+                        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', color: '#0d9488' }}>
+                            <Pill size={48} />
+                        </div>
                         <div style={{
-                            fontWeight: 600, color: '#374151',
-                            fontSize: '14px', marginBottom: '6px',
+                            fontWeight: 700, color: '#0f172a',
+                            fontSize: '15px', marginBottom: '6px',
                         }}>
                             Search for Medicines
                         </div>
-                        <div style={{ fontSize: '12px' }}>
-                            Type a medicine name above to see details, price & availability
+                        <div style={{ fontSize: '12px', color: '#64748b' }}>
+                            Type a medicine name above or select a category below
                         </div>
 
-                        {/* medicine type chips */}
+                        {/* medicine type chips - fully interactive */}
                         <div style={{
                             display: 'flex', gap: '8px', flexWrap: 'wrap',
                             justifyContent: 'center', marginTop: '20px',
                         }}>
-                            {Object.entries(typeConfig).map(([type, cfg]) => (
-                                <button
-                                    key={type}
-                                    onClick={() => setQuery(type.toLowerCase())}
-                                    style={{
-                                        padding: '6px 14px', borderRadius: '20px',
-                                        border: `1px solid ${cfg.color}`,
-                                        background: cfg.bg, color: cfg.color,
-                                        fontSize: '11px', fontWeight: 600,
-                                        cursor: 'pointer',
-                                    }}
-                                >
-                                    {cfg.icon} {type.charAt(0) + type.slice(1).toLowerCase()}
-                                </button>
-                            ))}
+                            {Object.entries(typeConfig).map(([type, cfg]) => {
+                                const TypeIcon = cfg.icon;
+                                return (
+                                    <button
+                                        key={type}
+                                        onClick={() => setQuery(type.toLowerCase())}
+                                        style={{
+                                            padding: '8px 16px', borderRadius: '20px',
+                                            border: `1px solid ${cfg.color}40`,
+                                            background: cfg.bg, color: cfg.color,
+                                            fontSize: '12px', fontWeight: 600,
+                                            cursor: 'pointer', transition: 'all 0.15s ease',
+                                            display: 'inline-flex', alignItems: 'center', gap: 6
+                                        }}
+                                    >
+                                        <TypeIcon size={14} />
+                                        <span>{type.charAt(0) + type.slice(1).toLowerCase()}</span>
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
                 )}
@@ -197,17 +212,19 @@ export default function Medicines() {
                     <div style={{
                         textAlign: 'center', padding: '50px',
                         background: '#fff', borderRadius: '12px',
-                        border: '1px solid #f0f0f0',
+                        border: '1px solid #e2e8f0',
                     }}>
-                        <div style={{ fontSize: '40px', marginBottom: '10px' }}>🔍</div>
+                        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', color: '#94a3b8' }}>
+                            <Search size={40} />
+                        </div>
                         <div style={{
-                            fontWeight: 600, color: '#374151',
+                            fontWeight: 700, color: '#0f172a',
                             marginBottom: '6px',
                         }}>
                             No medicines found
                         </div>
-                        <div style={{ fontSize: '12px', color: '#9ca3af' }}>
-                            Try a different name or spelling
+                        <div style={{ fontSize: '12px', color: '#64748b' }}>
+                            Try searching for Paracetamol, Amoxicillin, or click a category above
                         </div>
                     </div>
                 )}
@@ -219,27 +236,27 @@ export default function Medicines() {
                     }}>
                         {results.map(med => {
                             const cfg = typeConfig[med.type] || typeConfig.TABLET;
+                            const TypeIcon = cfg.icon;
                             return (
                                 <div
                                     key={med.id}
                                     onClick={() => setSelected(med)}
                                     style={{
-                                        background: '#fff', border: '1px solid #f0f0f0',
+                                        background: '#fff', border: '1px solid #e2e8f0',
                                         borderRadius: '12px', padding: '16px',
                                         cursor: 'pointer', transition: 'all .15s',
                                     }}
                                     onMouseEnter={e => {
-                                        e.currentTarget.style.borderColor = '#0a4f3a';
-                                        e.currentTarget.style.boxShadow = '0 4px 16px rgba(10,79,58,.08)';
+                                        e.currentTarget.style.borderColor = '#0d9488';
+                                        e.currentTarget.style.boxShadow = '0 4px 16px rgba(13,148,136,.1)';
                                         e.currentTarget.style.transform = 'translateY(-2px)';
                                     }}
                                     onMouseLeave={e => {
-                                        e.currentTarget.style.borderColor = '#f0f0f0';
+                                        e.currentTarget.style.borderColor = '#e2e8f0';
                                         e.currentTarget.style.boxShadow = 'none';
                                         e.currentTarget.style.transform = 'none';
                                     }}
                                 >
-                                    {/* type badge + icon */}
                                     <div style={{
                                         display: 'flex', alignItems: 'center',
                                         justifyContent: 'space-between', marginBottom: '10px',
@@ -247,14 +264,13 @@ export default function Medicines() {
                                         <div style={{
                                             width: '40px', height: '40px', borderRadius: '10px',
                                             background: cfg.bg, color: cfg.color,
-                                            fontSize: '20px', display: 'flex',
-                                            alignItems: 'center', justifyContent: 'center',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
                                         }}>
-                                            {cfg.icon}
+                                            <TypeIcon size={20} />
                                         </div>
                                         <span style={{
                                             background: cfg.bg, color: cfg.color,
-                                            fontSize: '9px', fontWeight: 700,
+                                            fontSize: '10px', fontWeight: 700,
                                             padding: '3px 8px', borderRadius: '6px',
                                             border: `1px solid ${cfg.color}33`,
                                         }}>
@@ -262,46 +278,44 @@ export default function Medicines() {
                                         </span>
                                     </div>
 
-                                    {/* name */}
                                     <div style={{
                                         fontSize: '13px', fontWeight: 700,
-                                        color: '#111', marginBottom: '3px',
+                                        color: '#0f172a', marginBottom: '3px',
                                     }}>
                                         {med.name}
                                     </div>
 
-                                    {/* category */}
                                     <div style={{
-                                        fontSize: '11px', color: '#6b7280',
+                                        fontSize: '11px', color: '#64748b',
                                         marginBottom: '10px',
                                     }}>
                                         {med.category || 'General'}
                                     </div>
 
                                     <div style={{
-                                        borderTop: '1px solid #f3f4f6',
+                                        borderTop: '1px solid #f1f5f9',
                                         paddingTop: '10px',
                                         display: 'grid', gridTemplateColumns: '1fr 1fr',
                                         gap: '8px',
                                     }}>
                                         <div>
-                                            <div style={{ fontSize: '10px', color: '#9ca3af' }}>
+                                            <div style={{ fontSize: '10px', color: '#94a3b8' }}>
                                                 Price
                                             </div>
                                             <div style={{
                                                 fontSize: '13px', fontWeight: 700,
-                                                color: '#0a4f3a',
+                                                color: '#0d9488',
                                             }}>
                                                 ₹{med.price}
                                             </div>
                                         </div>
                                         <div>
-                                            <div style={{ fontSize: '10px', color: '#9ca3af' }}>
+                                            <div style={{ fontSize: '10px', color: '#94a3b8' }}>
                                                 Stock
                                             </div>
                                             <div style={{
                                                 fontSize: '13px', fontWeight: 700,
-                                                color: med.stock > 10 ? '#166534' : '#dc2626',
+                                                color: med.stock > 10 ? '#059669' : '#dc2626',
                                             }}>
                                                 {med.stock > 0 ? `${med.stock} left` : 'Out of stock'}
                                             </div>
@@ -309,10 +323,10 @@ export default function Medicines() {
                                     </div>
 
                                     <div style={{
-                                        marginTop: '8px', fontSize: '10px',
-                                        color: '#9ca3af', textAlign: 'center',
+                                        marginTop: '8px', fontSize: '11px',
+                                        color: '#0d9488', fontWeight: 600, textAlign: 'center',
                                     }}>
-                                        Tap for details →
+                                        View Details →
                                     </div>
                                 </div>
                             );
@@ -321,16 +335,16 @@ export default function Medicines() {
                 )}
             </div>
 
-            {/* ✅ Detail Modal */}
+            {/* Detail Modal */}
             {selected && (
                 <div
                     onClick={() => setSelected(null)}
                     style={{
                         position: 'fixed', inset: 0,
-                        background: 'rgba(0,0,0,.4)',
+                        background: 'rgba(15,23,42,.4)',
                         display: 'flex', alignItems: 'center',
                         justifyContent: 'center', zIndex: 100,
-                        padding: '20px',
+                        padding: '20px', backdropFilter: 'blur(4px)'
                     }}
                 >
                     <div
@@ -338,10 +352,9 @@ export default function Medicines() {
                         style={{
                             background: '#fff', borderRadius: '16px',
                             padding: '24px', width: '100%', maxWidth: '420px',
-                            boxShadow: '0 20px 60px rgba(0,0,0,.2)',
+                            boxShadow: '0 20px 60px rgba(15,23,42,.2)', border: '1px solid #e2e8f0'
                         }}
                     >
-                        {/* modal header */}
                         <div style={{
                             display: 'flex', alignItems: 'center',
                             justifyContent: 'space-between', marginBottom: '20px',
@@ -349,19 +362,24 @@ export default function Medicines() {
                             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                 <div style={{
                                     width: '48px', height: '48px', borderRadius: '12px',
-                                    background: typeConfig[selected.type]?.bg || '#f3f4f6',
-                                    fontSize: '24px', display: 'flex',
-                                    alignItems: 'center', justifyContent: 'center',
+                                    background: typeConfig[selected.type]?.bg || '#f8fafc',
+                                    color: typeConfig[selected.type]?.color || '#0d9488',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 }}>
-                                    {typeConfig[selected.type]?.icon || '💊'}
+                                    {typeConfig[selected.type] ? (
+                                        (() => {
+                                            const ModalIcon = typeConfig[selected.type].icon;
+                                            return <ModalIcon size={24} />;
+                                        })()
+                                    ) : <Pill size={24} />}
                                 </div>
                                 <div>
                                     <div style={{
-                                        fontSize: '16px', fontWeight: 700, color: '#111',
+                                        fontSize: '16px', fontWeight: 700, color: '#0f172a',
                                     }}>
                                         {selected.name}
                                     </div>
-                                    <div style={{ fontSize: '11px', color: '#6b7280' }}>
+                                    <div style={{ fontSize: '11px', color: '#64748b' }}>
                                         {selected.category}
                                     </div>
                                 </div>
@@ -369,14 +387,16 @@ export default function Medicines() {
                             <button
                                 onClick={() => setSelected(null)}
                                 style={{
-                                    background: '#f3f4f6', border: 'none',
+                                    background: '#f1f5f9', border: 'none',
                                     borderRadius: '50%', width: '32px', height: '32px',
-                                    cursor: 'pointer', fontSize: '14px', color: '#6b7280',
+                                    cursor: 'pointer', color: '#64748b',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center'
                                 }}
-                            >✕</button>
+                            >
+                                <X size={16} />
+                            </button>
                         </div>
 
-                        {/* details grid */}
                         <div style={{
                             display: 'grid', gridTemplateColumns: '1fr 1fr',
                             gap: '12px', marginBottom: '16px',
@@ -388,17 +408,17 @@ export default function Medicines() {
                                 { label: 'Price',        value: `₹${selected.price}` },
                             ].map(item => (
                                 <div key={item.label} style={{
-                                    background: '#f9fafb', borderRadius: '10px',
-                                    padding: '10px 12px',
+                                    background: '#f8fafc', borderRadius: '10px',
+                                    padding: '10px 12px', border: '1px solid #e2e8f0'
                                 }}>
                                     <div style={{
-                                        fontSize: '10px', color: '#9ca3af',
-                                        textTransform: 'uppercase', marginBottom: '3px',
+                                        fontSize: '10px', color: '#64748b',
+                                        textTransform: 'uppercase', marginBottom: '3px', fontWeight: 600
                                     }}>
                                         {item.label}
                                     </div>
                                     <div style={{
-                                        fontSize: '13px', fontWeight: 600, color: '#111',
+                                        fontSize: '13px', fontWeight: 600, color: '#0f172a',
                                     }}>
                                         {item.value}
                                     </div>
@@ -406,47 +426,36 @@ export default function Medicines() {
                             ))}
                         </div>
 
-                        {/* stock bar */}
                         <div style={{
-                            background: '#f9fafb', borderRadius: '10px',
-                            padding: '12px', marginBottom: '16px',
+                            background: '#f8fafc', borderRadius: '10px',
+                            padding: '12px', marginBottom: '16px', border: '1px solid #e2e8f0'
                         }}>
                             <div style={{
                                 display: 'flex', justifyContent: 'space-between',
                                 marginBottom: '6px',
                             }}>
-                                <span style={{ fontSize: '11px', color: '#6b7280' }}>
+                                <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 500 }}>
                                     Stock Availability
                                 </span>
                                 <span style={{
                                     fontSize: '11px', fontWeight: 700,
-                                    color: selected.stock > 10 ? '#166534' : '#dc2626',
+                                    color: selected.stock > 10 ? '#059669' : '#dc2626',
                                 }}>
                                     {selected.stock} units
                                 </span>
                             </div>
                             <div style={{
-                                height: '6px', background: '#e5e7eb',
+                                height: '6px', background: '#e2e8f0',
                                 borderRadius: '3px', overflow: 'hidden',
                             }}>
                                 <div style={{
                                     height: '100%', borderRadius: '3px',
                                     width: `${Math.min((selected.stock / 100) * 100, 100)}%`,
                                     background: selected.stock > 10
-                                        ? 'linear-gradient(90deg,#0a4f3a,#1D9E75)'
+                                        ? 'linear-gradient(90deg, #0d9488, #0f172a)'
                                         : '#ef4444',
                                     transition: 'width .5s',
                                 }}/>
-                            </div>
-                            <div style={{
-                                fontSize: '10px', color: '#9ca3af', marginTop: '4px',
-                            }}>
-                                {selected.stock > 10
-                                    ? '✅ In Stock'
-                                    : selected.stock > 0
-                                        ? '⚠️ Low Stock'
-                                        : '❌ Out of Stock'
-                                }
                             </div>
                         </div>
 
@@ -454,7 +463,7 @@ export default function Medicines() {
                             onClick={() => setSelected(null)}
                             style={{
                                 width: '100%', padding: '11px', borderRadius: '10px',
-                                border: 'none', background: '#0a4f3a', color: '#fff',
+                                border: 'none', background: 'linear-gradient(135deg, #0d9488 0%, #0f172a 100%)', color: '#fff',
                                 fontSize: '13px', fontWeight: 600, cursor: 'pointer',
                             }}
                         >

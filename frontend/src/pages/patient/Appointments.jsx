@@ -184,52 +184,56 @@ export default function Appointments() {
                     {[
                         {
                             label:'Total Visits', value: counts.total,
-                            icon:'🏥', bg:'linear-gradient(135deg,#0a4f3a,#1D9E75)',
+                            Icon: Calendar, bg:'linear-gradient(135deg, #0d9488 0%, #0f172a 100%)',
                             color:'#fff', sub:'All time',
                         },
                         {
                             label:'Upcoming', value: counts.upcoming,
-                            icon:'📅', bg:'linear-gradient(135deg,#1e40af,#3b82f6)',
+                            Icon: Clock, bg:'linear-gradient(135deg, #0284c7 0%, #1e3a8a 100%)',
                             color:'#fff', sub:'Scheduled',
                         },
                         {
                             label:'Completed', value: counts.completed,
-                            icon:'✅', bg:'linear-gradient(135deg,#065f46,#059669)',
+                            Icon: CheckCircle2, bg:'linear-gradient(135deg, #059669 0%, #064e3b 100%)',
                             color:'#fff', sub:'Done',
                         },
                         {
                             label:'Cancelled', value: counts.cancelled,
-                            icon:'❌', bg:'linear-gradient(135deg,#991b1b,#ef4444)',
+                            Icon: XCircle, bg:'linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%)',
                             color:'#fff', sub:'Cancelled',
                         },
-                    ].map(card => (
-                        <div key={card.label} style={{
-                            background: card.bg, borderRadius:'12px',
-                            padding:'14px 16px', position:'relative', overflow:'hidden',
-                        }}>
-                            {/* decorative circle */}
-                            <div style={{
-                                position:'absolute', right:'-10px', top:'-10px',
-                                width:'60px', height:'60px', borderRadius:'50%',
-                                background:'rgba(255,255,255,.1)',
-                            }}/>
-                            <div style={{
-                                fontSize:'20px', marginBottom:'8px',
-                            }}>{card.icon}</div>
-                            <div style={{
-                                fontSize:'26px', fontWeight:800, color:card.color,
-                                lineHeight:1,
-                            }}>{card.value}</div>
-                            <div style={{
-                                fontSize:'11px', fontWeight:600,
-                                color:'rgba(255,255,255,.9)', marginTop:'4px',
-                            }}>{card.label}</div>
-                            <div style={{
-                                fontSize:'10px',
-                                color:'rgba(255,255,255,.6)', marginTop:'1px',
-                            }}>{card.sub}</div>
-                        </div>
-                    ))}
+                    ].map(card => {
+                        const CardIcon = card.Icon;
+                        return (
+                            <div key={card.label} style={{
+                                background: card.bg, borderRadius:'12px',
+                                padding:'14px 16px', position:'relative', overflow:'hidden',
+                            }}>
+                                <div style={{
+                                    position:'absolute', right:'-10px', top:'-10px',
+                                    width:'60px', height:'60px', borderRadius:'50%',
+                                    background:'rgba(255,255,255,.1)',
+                                }}/>
+                                <div style={{
+                                    marginBottom:'8px', color: '#fff'
+                                }}>
+                                    <CardIcon size={22} />
+                                </div>
+                                <div style={{
+                                    fontSize:'26px', fontWeight:800, color:card.color,
+                                    lineHeight:1,
+                                }}>{card.value}</div>
+                                <div style={{
+                                    fontSize:'11px', fontWeight:600,
+                                    color:'rgba(255,255,255,.9)', marginTop:'4px',
+                                }}>{card.label}</div>
+                                <div style={{
+                                    fontSize:'10px',
+                                    color:'rgba(255,255,255,.6)', marginTop:'1px',
+                                }}>{card.sub}</div>
+                            </div>
+                        );
+                    })}
                 </div>
 
                 {/* ✅ Filter tabs */}
@@ -238,21 +242,21 @@ export default function Appointments() {
                 }}>
                     {[
                         { key:'ALL',       label:`All (${counts.total})` },
-                        { key:'UPCOMING',  label:`🔜 Upcoming (${counts.upcoming})` },
-                        { key:'BOOKED',    label:'🕐 Booked' },
-                        { key:'CONFIRMED', label:'✅ Confirmed' },
-                        { key:'COMPLETED', label:'🏁 Completed' },
-                        { key:'CANCELLED', label:'❌ Cancelled' },
+                        { key:'UPCOMING',  label:`Upcoming (${counts.upcoming})` },
+                        { key:'BOOKED',    label:'Booked' },
+                        { key:'CONFIRMED', label:'Confirmed' },
+                        { key:'COMPLETED', label:'Completed' },
+                        { key:'CANCELLED', label:'Cancelled' },
                     ].map(f => (
                         <button
                             key={f.key}
                             onClick={() => setFilter(f.key)}
                             style={{
-                                padding:'5px 14px', borderRadius:'16px', fontSize:'11px',
+                                padding:'6px 14px', borderRadius:'16px', fontSize:'11px',
                                 fontWeight:600, cursor:'pointer', transition:'all .12s',
-                                border: filter === f.key ? 'none' : '1px solid #e5e7eb',
-                                background: filter === f.key ? '#0a4f3a' : '#fff',
-                                color: filter === f.key ? '#fff' : '#6b7280',
+                                border: filter === f.key ? 'none' : '1px solid #cbd5e1',
+                                background: filter === f.key ? 'linear-gradient(135deg, #0d9488 0%, #0f172a 100%)' : '#fff',
+                                color: filter === f.key ? '#fff' : '#475569',
                             }}
                         >
                             {f.label}
@@ -260,26 +264,28 @@ export default function Appointments() {
                     ))}
                 </div>
 
-                {/* ✅ Appointments list — cards instead of table */}
+                {/* ✅ Appointments list */}
                 {loading ? (
                     <div style={{
                         display:'flex', flexDirection:'column', gap:'10px',
                     }}>
                         {[...Array(3)].map((_, i) => (
                             <div key={i} style={{
-                                background:'#f9fafb', borderRadius:'12px',
+                                background:'#f8fafc', borderRadius:'12px',
                                 height:'70px', animation:'pulse 1.5s infinite',
                             }}/>
                         ))}
                     </div>
                 ) : filtered.length === 0 ? (
                     <div style={{
-                        background:'#fff', border:'1px solid #f0f0f0',
+                        background:'#fff', border:'1px solid #e2e8f0',
                         borderRadius:'12px', padding:'50px',
-                        textAlign:'center', color:'#9ca3af',
+                        textAlign:'center', color:'#64748b',
                     }}>
-                        <div style={{ fontSize:'40px', marginBottom:'10px' }}>📭</div>
-                        <div style={{ fontWeight:600, color:'#374151', marginBottom:'4px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'center', marginBottom:'12px', color: '#94a3b8' }}>
+                            <Calendar size={40} />
+                        </div>
+                        <div style={{ fontWeight:600, color:'#0f172a', marginBottom:'4px' }}>
                             No appointments found
                         </div>
                         <div style={{ fontSize:'12px', marginBottom:'14px' }}>
@@ -289,7 +295,7 @@ export default function Appointments() {
                             onClick={() => navigate('/patient/doctors')}
                             style={{
                                 padding:'8px 18px', borderRadius:'8px', border:'none',
-                                background:'#0a4f3a', color:'#fff',
+                                background:'linear-gradient(135deg, #0d9488 0%, #0f172a 100%)', color:'#fff',
                                 fontSize:'12px', fontWeight:600, cursor:'pointer',
                             }}
                         >

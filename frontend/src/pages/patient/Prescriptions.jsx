@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { downloadPdf } from '../../utils/downloadPdf';
 import api from '../../api/axios';
+import { FileText, Download, Loader2, Search, CheckCircle2, Clock } from 'lucide-react';
 
 export default function Prescriptions() {
     const [prescriptions, setPrescriptions] = useState([]);
@@ -33,16 +34,11 @@ export default function Prescriptions() {
     );
 
     return (
-        <div style={{ display:'flex', flexDirection:'column', height:'100%', background:'#f0f4f8', fontFamily:"'DM Sans','Outfit',sans-serif" }}>
+        <div style={{ display:'flex', flexDirection:'column', height:'100%', background:'#f8fafc', fontFamily:"'Inter', system-ui, sans-serif" }}>
             <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap');
                 @keyframes rx-fadein { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-
-                /* Desktop table */
                 .rx-table-wrap { display:block; }
                 .rx-cards-wrap  { display:none; }
-
-                /* Responsive */
                 @media(max-width:768px) {
                     .rx-table-wrap { display:none !important; }
                     .rx-cards-wrap  { display:flex !important; flex-direction:column; gap:12px; }
@@ -52,25 +48,25 @@ export default function Prescriptions() {
                     .rx-body-pad { padding:14px !important; }
                     .rx-search   { max-width:100% !important; }
                 }
-
                 .rx-row { transition:background .15s; }
                 .rx-row:hover { background:#f0fdf4 !important; }
-                .rx-dl-btn:hover { background:#f0fdf4 !important; border-color:#1D9E75 !important; color:#0a4f3a !important; }
-                .rx-card-item { background:#fff; border:1px solid #e8edf2; border-radius:14px; padding:16px; box-shadow:0 1px 6px rgba(0,0,0,.05); animation:rx-fadein .3s ease; transition:box-shadow .2s; }
-                .rx-card-item:hover { box-shadow:0 4px 16px rgba(10,79,58,.1); }
+                .rx-dl-btn:hover { background:#f0fdf4 !important; border-color:#0d9488 !important; color:#0d9488 !important; }
+                .rx-card-item { background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:16px; box-shadow:0 1px 6px rgba(0,0,0,.04); animation:rx-fadein .3s ease; transition:box-shadow .2s; }
+                .rx-card-item:hover { box-shadow:0 4px 16px rgba(13,148,136,.08); }
             `}</style>
 
             {/* ── HERO ── */}
             <div className="rx-hero-pad" style={{
-                background:'linear-gradient(135deg,#062e22 0%,#0a4f3a 45%,#1D9E75 100%)',
-                padding:'20px 28px 22px', flexShrink:0, position:'relative', overflow:'hidden',
+                background:'linear-gradient(145deg, #0f172a 0%, #1e293b 60%, #0f766e 100%)',
+                padding:'20px 28px 22px', flexShrink:0, position:'relative', overflow:'hidden', color:'#fff',
             }}>
                 <div style={{ position:'absolute', top:-50, right:-40, width:200, height:200, borderRadius:'50%', background:'rgba(255,255,255,.04)', pointerEvents:'none' }}/>
-                <div style={{ fontSize:10, color:'rgba(255,255,255,.45)', fontWeight:700, textTransform:'uppercase', letterSpacing:'.1em', marginBottom:5 }}>Patient Portal</div>
-                <div style={{ fontSize:20, fontWeight:700, color:'#fff', fontFamily:"'Playfair Display',serif", marginBottom:4 }}>
-                    💊 My Prescriptions
+                <div style={{ fontSize:10, color:'rgba(255,255,255,.5)', fontWeight:700, textTransform:'uppercase', letterSpacing:'.1em', marginBottom:5 }}>Patient Portal</div>
+                <div style={{ fontSize:20, fontWeight:700, color:'#fff', marginBottom:4, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <FileText size={20} color="#2dd4bf" />
+                    <span>My Prescriptions</span>
                 </div>
-                <div style={{ fontSize:11, color:'rgba(255,255,255,.55)' }}>
+                <div style={{ fontSize:11, color:'rgba(255,255,255,.7)' }}>
                     {loading ? 'Loading...' : `${prescriptions.length} prescription${prescriptions.length !== 1 ? 's' : ''} from your doctors`}
                 </div>
             </div>
@@ -79,36 +75,42 @@ export default function Prescriptions() {
             <div className="rx-body-pad" style={{ flex:1, overflowY:'auto', padding:'20px 28px' }}>
 
                 {/* Search */}
-                <input
-                    className="rx-search"
-                    value={search} onChange={e => setSearch(e.target.value)}
-                    placeholder="🔍  Search by doctor or medicine..."
-                    style={{ width:'100%', maxWidth:400, border:'1px solid #e2e8f0', borderRadius:10, padding:'10px 14px', fontSize:12, background:'#fff', outline:'none', fontFamily:"'DM Sans',sans-serif", marginBottom:16, boxSizing:'border-box', boxShadow:'0 1px 4px rgba(0,0,0,.04)' }}
-                />
+                <div style={{ position: 'relative', maxWidth: 400, marginBottom: 16 }}>
+                    <Search size={16} color="#64748b" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
+                    <input
+                        className="rx-search"
+                        value={search} onChange={e => setSearch(e.target.value)}
+                        placeholder="Search by doctor or medicine..."
+                        style={{ width:'100%', border:'1px solid #cbd5e1', borderRadius:10, padding:'10px 14px 10px 36px', fontSize:12, background:'#fff', outline:'none', fontFamily:"'Inter', system-ui, sans-serif", boxSizing:'border-box', boxShadow:'0 1px 4px rgba(0,0,0,.02)' }}
+                    />
+                </div>
 
                 {loading ? (
-                    <div style={{ background:'#fff', borderRadius:16, border:'1px solid #e8edf2', padding:'60px 20px', textAlign:'center', color:'#94a3b8' }}>
-                        <div style={{ fontSize:28, marginBottom:10 }}>⏳</div>
+                    <div style={{ background:'#fff', borderRadius:16, border:'1px solid #e2e8f0', padding:'60px 20px', textAlign:'center', color:'#64748b' }}>
+                        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
+                            <Loader2 size={28} className="animate-spin" color="#0d9488" />
+                        </div>
                         <div style={{ fontSize:13 }}>Loading prescriptions...</div>
                     </div>
 
                 ) : filtered.length === 0 ? (
-                    <div style={{ background:'#fff', borderRadius:16, border:'1px solid #e8edf2', padding:'70px 20px', textAlign:'center' }}>
-                        <div style={{ fontSize:44, marginBottom:12 }}>💊</div>
-                        <div style={{ fontSize:15, fontWeight:700, color:'#374151', marginBottom:6 }}>
+                    <div style={{ background:'#fff', borderRadius:16, border:'1px solid #e2e8f0', padding:'70px 20px', textAlign:'center' }}>
+                        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12, color: '#94a3b8' }}>
+                            <FileText size={44} />
+                        </div>
+                        <div style={{ fontSize:15, fontWeight:700, color:'#0f172a', marginBottom:6 }}>
                             {search ? `No results for "${search}"` : 'No prescriptions yet'}
                         </div>
-                        <div style={{ fontSize:12, color:'#94a3b8' }}>Your doctor's prescriptions will appear here</div>
+                        <div style={{ fontSize:12, color:'#64748b' }}>Your doctor's prescriptions will appear here</div>
                     </div>
 
                 ) : (
                     <>
                         {/* ── DESKTOP TABLE ── */}
-                        <div className="rx-table-wrap" style={{ background:'#fff', borderRadius:16, border:'1px solid #e8edf2', boxShadow:'0 1px 6px rgba(0,0,0,.04)', overflow:'hidden' }}>
-                            {/* Table header */}
+                        <div className="rx-table-wrap" style={{ background:'#fff', borderRadius:16, border:'1px solid #e2e8f0', boxShadow:'0 1px 6px rgba(0,0,0,.03)', overflow:'hidden' }}>
                             <div style={{ display:'grid', gridTemplateColumns:'2fr 1.4fr 1.2fr 1fr 1fr 0.8fr 0.9fr', padding:'11px 20px', background:'#f8fafc', borderBottom:'2px solid #f1f5f9' }}>
                                 {['Medicine','Doctor','Frequency','Duration','Date','Status','Download'].map(h => (
-                                    <div key={h} style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:'.07em' }}>{h}</div>
+                                    <div key={h} style={{ fontSize:10, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:'.07em' }}>{h}</div>
                                 ))}
                             </div>
 
@@ -122,9 +124,8 @@ export default function Prescriptions() {
 
                                 return (
                                     <div key={rx.id} className="rx-row"
-                                         style={{ display:'grid', gridTemplateColumns:'2fr 1.4fr 1.2fr 1fr 1fr 0.8fr 0.9fr', padding:'13px 20px', borderBottom: idx < filtered.length-1 ? '1px solid #f8fafc' : 'none', alignItems:'center' }}>
+                                         style={{ display:'grid', gridTemplateColumns:'2fr 1.4fr 1.2fr 1fr 1fr 0.8fr 0.9fr', padding:'13px 20px', borderBottom: idx < filtered.length-1 ? '1px solid #f1f5f9' : 'none', alignItems:'center' }}>
 
-                                        {/* Medicine */}
                                         <div>
                                             {medNames.length > 0
                                                 ? medNames.map((name,i) => (
@@ -135,46 +136,43 @@ export default function Prescriptions() {
                                                 : <span style={{ color:'#cbd5e1', fontSize:12 }}>—</span>}
                                         </div>
 
-                                        {/* Doctor */}
-                                        <div style={{ fontSize:12, fontWeight:500, color:'#374151' }}>
+                                        <div style={{ fontSize:12, fontWeight:500, color:'#334155' }}>
                                             {rx.doctorName || '—'}
                                         </div>
 
-                                        {/* Frequency */}
                                         <div>
                                             {freqs.length > 0
-                                                ? freqs.map((f,i) => <div key={i} style={{ fontSize:11, color:'#6b7280', marginBottom:i<freqs.length-1?3:0 }}>{f}</div>)
+                                                ? freqs.map((f,i) => <div key={i} style={{ fontSize:11, color:'#64748b', marginBottom:i<freqs.length-1?3:0 }}>{f}</div>)
                                                 : <span style={{ color:'#cbd5e1', fontSize:11 }}>—</span>}
                                         </div>
 
-                                        {/* Duration */}
                                         <div>
                                             {durations.length > 0
-                                                ? durations.map((d,i) => <div key={i} style={{ fontSize:11, color:'#6b7280', marginBottom:i<durations.length-1?3:0 }}>{d}</div>)
+                                                ? durations.map((d,i) => <div key={i} style={{ fontSize:11, color:'#64748b', marginBottom:i<durations.length-1?3:0 }}>{d}</div>)
                                                 : <span style={{ color:'#cbd5e1', fontSize:11 }}>—</span>}
                                         </div>
 
-                                        {/* Date */}
-                                        <div style={{ fontSize:11, color:'#6b7280' }}>{dateStr}</div>
+                                        <div style={{ fontSize:11, color:'#64748b' }}>{dateStr}</div>
 
-                                        {/* Status */}
                                         <div>
                                             <span style={{
-                                                background: rx.active ? '#dcfce7' : '#f3f4f6',
-                                                color:      rx.active ? '#15803d' : '#6b7280',
+                                                background: rx.active ? '#f0fdf4' : '#f8fafc',
+                                                color:      rx.active ? '#0d9488' : '#64748b',
+                                                border:     rx.active ? '1px solid #99f6e4' : '1px solid #e2e8f0',
                                                 padding:'3px 10px', borderRadius:20,
-                                                fontSize:10, fontWeight:700,
+                                                fontSize:10, fontWeight:700, display: 'inline-flex', alignItems: 'center', gap: 4
                                             }}>
-                                                {rx.active ? '✓ Active' : 'Done'}
+                                                {rx.active ? <CheckCircle2 size={12} /> : <Clock size={12} />}
+                                                <span>{rx.active ? 'Active' : 'Done'}</span>
                                             </span>
                                         </div>
 
-                                        {/* Download */}
                                         <button className="rx-dl-btn"
                                                 onClick={() => handleDownload(rx.id)}
                                                 disabled={downloading === rx.id}
-                                                style={{ padding:'6px 12px', borderRadius:8, border:'1px solid #e2e8f0', background:'#fff', color:'#374151', fontSize:11, fontWeight:600, cursor:'pointer', transition:'all .15s', whiteSpace:'nowrap' }}>
-                                            {downloading === rx.id ? '⏳' : '⬇ PDF'}
+                                                style={{ padding:'6px 12px', borderRadius:8, border:'1px solid #cbd5e1', background:'#fff', color:'#0f172a', fontSize:11, fontWeight:600, cursor:'pointer', transition:'all .15s', whiteSpace:'nowrap', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                                            {downloading === rx.id ? <Loader2 size={12} className="animate-spin" /> : <Download size={12} />}
+                                            <span>PDF</span>
                                         </button>
                                     </div>
                                 );
@@ -190,51 +188,50 @@ export default function Prescriptions() {
 
                                 return (
                                     <div key={rx.id} className="rx-card-item">
-
-                                        {/* Top row: doctor + status + download */}
                                         <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:12 }}>
                                             <div>
-                                                <div style={{ fontSize:10, color:'#94a3b8', fontWeight:700, textTransform:'uppercase', letterSpacing:'.06em', marginBottom:3 }}>Doctor</div>
+                                                <div style={{ fontSize:10, color:'#64748b', fontWeight:700, textTransform:'uppercase', letterSpacing:'.06em', marginBottom:3 }}>Doctor</div>
                                                 <div style={{ fontSize:13, fontWeight:700, color:'#0f172a' }}>{rx.doctorName || '—'}</div>
-                                                <div style={{ fontSize:10, color:'#94a3b8', marginTop:2 }}>{dateStr}</div>
+                                                <div style={{ fontSize:10, color:'#64748b', marginTop:2 }}>{dateStr}</div>
                                             </div>
                                             <div style={{ display:'flex', flexDirection:'column', alignItems:'flex-end', gap:8 }}>
                                                 <span style={{
-                                                    background: rx.active ? '#dcfce7' : '#f3f4f6',
-                                                    color:      rx.active ? '#15803d' : '#6b7280',
+                                                    background: rx.active ? '#f0fdf4' : '#f8fafc',
+                                                    color:      rx.active ? '#0d9488' : '#64748b',
+                                                    border:     rx.active ? '1px solid #99f6e4' : '1px solid #e2e8f0',
                                                     padding:'3px 10px', borderRadius:20,
-                                                    fontSize:10, fontWeight:700,
+                                                    fontSize:10, fontWeight:700, display: 'inline-flex', alignItems: 'center', gap: 4
                                                 }}>
-                                                    {rx.active ? '✓ Active' : 'Done'}
+                                                    {rx.active ? <CheckCircle2 size={12} /> : <Clock size={12} />}
+                                                    <span>{rx.active ? 'Active' : 'Done'}</span>
                                                 </span>
                                                 <button
                                                     onClick={() => handleDownload(rx.id)}
                                                     disabled={downloading === rx.id}
-                                                    style={{ padding:'6px 14px', borderRadius:8, border:'1px solid #e2e8f0', background:'#fff', color:'#0a4f3a', fontSize:11, fontWeight:700, cursor:'pointer', whiteSpace:'nowrap' }}>
-                                                    {downloading === rx.id ? '⏳' : '⬇ PDF'}
+                                                    style={{ padding:'6px 14px', borderRadius:8, border:'1px solid #cbd5e1', background:'#fff', color:'#0d9488', fontSize:11, fontWeight:700, cursor:'pointer', whiteSpace:'nowrap', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                                                    {downloading === rx.id ? <Loader2 size={12} className="animate-spin" /> : <Download size={12} />}
+                                                    <span>PDF</span>
                                                 </button>
                                             </div>
                                         </div>
 
-                                        {/* Divider */}
                                         <div style={{ borderTop:'1px solid #f1f5f9', marginBottom:12 }}/>
 
-                                        {/* Medicines list */}
                                         {rx.medicines?.length > 0 ? (
                                             <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
                                                 {rx.medicines.map((m, i) => (
                                                     <div key={i} style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:8, background:'#f8fafc', borderRadius:10, padding:'10px 12px' }}>
                                                         <div>
-                                                            <div style={{ fontSize:9, color:'#94a3b8', fontWeight:700, textTransform:'uppercase', letterSpacing:'.05em', marginBottom:2 }}>Medicine</div>
+                                                            <div style={{ fontSize:9, color:'#64748b', fontWeight:700, textTransform:'uppercase', letterSpacing:'.05em', marginBottom:2 }}>Medicine</div>
                                                             <div style={{ fontSize:12, fontWeight:700, color:'#0f172a' }}>{m.medicineName || '—'}</div>
                                                         </div>
                                                         <div>
-                                                            <div style={{ fontSize:9, color:'#94a3b8', fontWeight:700, textTransform:'uppercase', letterSpacing:'.05em', marginBottom:2 }}>Frequency</div>
-                                                            <div style={{ fontSize:11, color:'#374151', fontWeight:500 }}>{m.frequency || '—'}</div>
+                                                            <div style={{ fontSize:9, color:'#64748b', fontWeight:700, textTransform:'uppercase', letterSpacing:'.05em', marginBottom:2 }}>Frequency</div>
+                                                            <div style={{ fontSize:11, color:'#334155', fontWeight:500 }}>{m.frequency || '—'}</div>
                                                         </div>
                                                         <div>
-                                                            <div style={{ fontSize:9, color:'#94a3b8', fontWeight:700, textTransform:'uppercase', letterSpacing:'.05em', marginBottom:2 }}>Duration</div>
-                                                            <div style={{ fontSize:11, color:'#374151', fontWeight:500 }}>{m.durationDays ? `${m.durationDays} days` : '—'}</div>
+                                                            <div style={{ fontSize:9, color:'#64748b', fontWeight:700, textTransform:'uppercase', letterSpacing:'.05em', marginBottom:2 }}>Duration</div>
+                                                            <div style={{ fontSize:11, color:'#334155', fontWeight:500 }}>{m.durationDays ? `${m.durationDays} days` : '—'}</div>
                                                         </div>
                                                     </div>
                                                 ))}
