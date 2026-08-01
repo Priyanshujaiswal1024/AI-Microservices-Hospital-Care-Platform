@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
+import { Calendar, Loader2, AlertCircle, CheckCircle2, Pill, ClipboardList } from 'lucide-react';
 
 export default function DoctorAppointments() {
     const navigate = useNavigate();
@@ -190,7 +191,7 @@ export default function DoctorAppointments() {
             {/* Hero */}
             <div style={{ background:'linear-gradient(135deg,#0f3460,#185FA5)', padding:'18px 24px', display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0 }}>
                 <div>
-                    <div style={{ fontSize:'18px', fontWeight:700, color:'#fff', fontFamily:"'Playfair Display',serif" }}>📅 Appointments</div>
+                    <div style={{ fontSize:'18px', fontWeight:700, color:'#fff', fontFamily:"'Playfair Display',serif", display:'flex', alignItems:'center', gap:8 }}><Calendar size={18}/>Appointments</div>
                     <div style={{ fontSize:'11px', color:'rgba(255,255,255,.55)', marginTop:'2px' }}>
                         {loading ? 'Loading...' : `${appointments.length} total appointments`}
                     </div>
@@ -213,13 +214,13 @@ export default function DoctorAppointments() {
             <div style={{ flex:1, overflowY:'auto', padding:'18px 24px' }}>
 
                 {error && (
-                    <div style={{ background:'#fef2f2', border:'1px solid #fecaca', color:'#dc2626', fontSize:'12px', borderRadius:'9px', padding:'10px 14px', marginBottom:'12px' }}>
-                        ⚠️ {error}
+                    <div style={{ background:'#fef2f2', border:'1px solid #fecaca', color:'#dc2626', fontSize:'12px', borderRadius:'9px', padding:'10px 14px', marginBottom:'12px', display:'flex', alignItems:'center', gap:6 }}>
+                        <AlertCircle size={14}/>{error}
                     </div>
                 )}
                 {success && (
-                    <div style={{ background:'#f0fdf4', border:'1px solid #bbf7d0', color:'#166534', fontSize:'12px', borderRadius:'9px', padding:'10px 14px', marginBottom:'12px' }}>
-                        ✅ {success}
+                    <div style={{ background:'#f0fdf4', border:'1px solid #bbf7d0', color:'#166534', fontSize:'12px', borderRadius:'9px', padding:'10px 14px', marginBottom:'12px', display:'flex', alignItems:'center', gap:6 }}>
+                        <CheckCircle2 size={14}/>{success}
                     </div>
                 )}
 
@@ -245,14 +246,14 @@ export default function DoctorAppointments() {
                 {/* Table */}
                 <div style={{ background:'#fff', borderRadius:'16px', border:'1px solid #e8edf2', boxShadow:'0 1px 6px rgba(0,0,0,.04)', overflow:'hidden' }}>
                     {loading ? (
-                        <div style={{ padding:'60px', textAlign:'center', color:'#94a3b8', fontSize:'13px' }}>
-                            <div style={{ fontSize:'28px', marginBottom:'10px' }}>⏳</div>
-                            Loading appointments...
+                        <div style={{ padding:'60px', textAlign:'center', color:'#94a3b8', display:'flex', flexDirection:'column', alignItems:'center', gap:10 }}>
+                            <Loader2 size={22} color="#94a3b8" style={{ animation:'spin 1s linear infinite' }}/>
+                            <span style={{ fontSize:13 }}>Loading appointments...</span>
                         </div>
                     ) : filtered.length === 0 ? (
-                        <div style={{ padding:'60px', textAlign:'center', color:'#94a3b8', fontSize:'13px' }}>
-                            <div style={{ fontSize:'36px', marginBottom:'10px' }}>🗓️</div>
-                            No appointments found.
+                        <div style={{ padding:'60px', textAlign:'center', color:'#94a3b8' }}>
+                            <Calendar size={36} color="#e2e8f0" style={{ marginBottom:10, display:'block', margin:'0 auto 10px' }}/>
+                            <span style={{ fontSize:13 }}>No appointments found.</span>
                         </div>
                     ) : (
                         <table style={{ width:'100%', borderCollapse:'collapse' }}>
@@ -284,10 +285,10 @@ export default function DoctorAppointments() {
                                                         <div style={{ fontSize:'10px', color:'#94a3b8' }}>
                                                             #{appt.id}
                                                             {appt.prescriptionId && (
-                                                                <span style={{ marginLeft:'5px', background:'#EFF6FF', color:'#185FA5', padding:'1px 5px', borderRadius:'4px', fontSize:'9px', fontWeight:600 }}>💊 Rx</span>
+                                                                <span style={{ marginLeft:'5px', background:'#EFF6FF', color:'#185FA5', padding:'1px 5px', borderRadius:'4px', fontSize:'9px', fontWeight:600, display:'inline-flex', alignItems:'center', gap:2 }}><Pill size={8}/>Rx</span>
                                                             )}
                                                             {appt.medicalRecordId && (
-                                                                <span style={{ marginLeft:'3px', background:'#f0fdf4', color:'#15803d', padding:'1px 5px', borderRadius:'4px', fontSize:'9px', fontWeight:600 }}>📋 MR</span>
+                                                                <span style={{ marginLeft:'3px', background:'#f0fdf4', color:'#15803d', padding:'1px 5px', borderRadius:'4px', fontSize:'9px', fontWeight:600, display:'inline-flex', alignItems:'center', gap:2 }}><ClipboardList size={8}/>MR</span>
                                                             )}
                                                         </div>
                                                     </div>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
+import { FileText, Search, Download, Loader2, Pill } from 'lucide-react';
 
 export default function DoctorPrescriptions() {
     const navigate = useNavigate();
@@ -36,7 +37,7 @@ export default function DoctorPrescriptions() {
                 <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', position:'relative' }}>
                     <div>
                         <div style={{ fontSize:'10px', color:'rgba(255,255,255,.5)', fontWeight:600, letterSpacing:'.08em', textTransform:'uppercase', marginBottom:'4px' }}>Patient Care</div>
-                        <div style={{ fontSize:'20px', fontWeight:700, color:'#fff', fontFamily:"'Playfair Display',serif" }}>💊 Prescriptions</div>
+                        <div style={{ fontSize:'20px', fontWeight:700, color:'#fff', fontFamily:"'Playfair Display',serif", display:'flex', alignItems:'center', gap:8 }}><Pill size={20}/>Prescriptions</div>
                         <div style={{ fontSize:'11px', color:'rgba(255,255,255,.55)', marginTop:'3px' }}>
                             {loading ? 'Loading...' : `${prescriptions.length} prescriptions written`}
                         </div>
@@ -47,7 +48,7 @@ export default function DoctorPrescriptions() {
 
             <div style={{ flex:1, overflowY:'auto', padding:'20px 28px' }}>
                 <input value={search} onChange={e => setSearch(e.target.value)}
-                       placeholder="🔍  Search by patient name..."
+                       placeholder="Search by patient name..."
                        style={{ width:'100%', maxWidth:'420px', border:'1px solid #e2e8f0', borderRadius:'10px', padding:'10px 14px', fontSize:'12px', background:'#fff', boxSizing:'border-box', marginBottom:'16px', outline:'none', fontFamily:"'DM Sans',sans-serif" }}
                 />
 
@@ -60,10 +61,10 @@ export default function DoctorPrescriptions() {
                     </div>
 
                     {loading ? (
-                        <div style={{ padding:'60px', textAlign:'center', color:'#94a3b8', fontSize:'13px' }}>Loading prescriptions...</div>
+                        <div style={{ padding:'60px', textAlign:'center', color:'#94a3b8', display:'flex', flexDirection:'column', alignItems:'center', gap:10 }}><Loader2 size={22} color="#94a3b8" style={{ animation:'spin 1s linear infinite' }}/><span style={{ fontSize:13 }}>Loading prescriptions...</span></div>
                     ) : filtered.length === 0 ? (
                         <div style={{ padding:'70px 20px', textAlign:'center' }}>
-                            <div style={{ fontSize:'44px', marginBottom:'12px' }}>💊</div>
+                            <Pill size={40} color="#e2e8f0" style={{ marginBottom:12, display:'block', margin:'0 auto 12px' }}/>
                             <div style={{ fontSize:'15px', fontWeight:700, color:'#374151', marginBottom:'6px' }}>
                                 {search ? `No results for "${search}"` : 'No prescriptions yet'}
                             </div>
@@ -109,7 +110,7 @@ export default function DoctorPrescriptions() {
                                     {medCount} {medCount===1?'med':'meds'}
                                 </span>
                                 <div style={{ fontSize:'11px', color:'#6b7280', fontWeight:500 }}>{dateStr}</div>
-                                <button onClick={downloadPdf} style={{ padding:'6px 13px', borderRadius:'8px', border:'1px solid #e2e8f0', background:'#fff', color:'#185FA5', fontSize:'11px', fontWeight:600, cursor:'pointer' }}>⬇ PDF</button>
+                                <button onClick={downloadPdf} style={{ padding:'6px 13px', borderRadius:'8px', border:'1px solid #e2e8f0', background:'#fff', color:'#185FA5', fontSize:'11px', fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:4 }}><Download size={12}/>PDF</button>
                             </div>
                         );
                     })}

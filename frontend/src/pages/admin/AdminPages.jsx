@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../../api/axios';
+import { Users, Calendar, Building2, Pill, Pencil, PackagePlus, Trash2, Search, CheckCircle2, AlertCircle, Clock } from 'lucide-react';
 
 // ✅ Blood group labels
 const bloodGroupLabels = {
@@ -71,7 +72,7 @@ export function AdminPatients() {
             <div style={HERO_STYLE}>
                 <div>
                     <div style={{ fontSize:'10px', color:'rgba(255,255,255,.5)', fontWeight:600, letterSpacing:'.08em', textTransform:'uppercase', marginBottom:'3px' }}>Management</div>
-                    <div style={{ fontSize:'20px', fontWeight:700, color:'#fff', fontFamily:"'Lora',serif" }}>👥 Patients</div>
+                    <div style={{ fontSize:'20px', fontWeight:700, color:'#fff', fontFamily:"'Lora',serif", display:'flex', alignItems:'center', gap:8 }}><Users size={20}/>Patients</div>
                     <div style={{ fontSize:'11px', color:'rgba(255,255,255,.55)', marginTop:'2px' }}>
                         {loading ? 'Loading...' : `${patients.length} patients registered`}
                     </div>
@@ -80,7 +81,7 @@ export function AdminPatients() {
 
             <div style={{ flex:1, overflowY:'auto', padding:'20px 28px' }}>
                 <input value={search} onChange={e => setSearch(e.target.value)}
-                       placeholder="🔍  Search patients..."
+                       placeholder="Search patients..."
                        style={{ ...inp, maxWidth:'400px', boxShadow:'0 1px 3px rgba(0,0,0,.04)', marginBottom:'16px' }}/>
 
                 <div style={{ background:'#fff', borderRadius:'16px', border:'1px solid #e8edf2', overflow:'hidden', animation:'fadeUp .3s ease' }}>
@@ -96,7 +97,7 @@ export function AdminPatients() {
                         <div style={{ padding:'60px', textAlign:'center', color:'#94a3b8' }}>Loading patients...</div>
                     ) : filtered.length === 0 ? (
                         <div style={{ padding:'60px', textAlign:'center', color:'#94a3b8' }}>
-                            <div style={{ fontSize:'40px', marginBottom:'10px' }}>👥</div>
+                            <Users size={36} color="#cbd5e1" style={{marginBottom:10}}/>
                             {search ? `No results for "${search}"` : 'No patients yet'}
                         </div>
                     ) : filtered.map((p, idx) => {
@@ -126,7 +127,7 @@ export function AdminPatients() {
 
                                 {/* ✅ Blood Group — human readable */}
                                 <span style={{ background:'#fef2f2', color:'#dc2626', padding:'3px 9px', borderRadius:'20px', fontSize:'11px', fontWeight:700, width:'fit-content' }}>
-                                    🩸 {bloodGroupLabels[p.bloodGroup] || p.bloodGroup || '—'}
+                                    {bloodGroupLabels[p.bloodGroup] || p.bloodGroup || '—'}
                                 </span>
 
                                 {/* Gender */}
@@ -178,7 +179,7 @@ export function AdminAppointments() {
             <div style={{ ...HERO_STYLE, justifyContent:'flex-start' }}>
                 <div>
                     <div style={{ fontSize:'10px', color:'rgba(255,255,255,.5)', fontWeight:600, letterSpacing:'.08em', textTransform:'uppercase', marginBottom:'3px' }}>Management</div>
-                    <div style={{ fontSize:'20px', fontWeight:700, color:'#fff', fontFamily:"'Lora',serif" }}>📅 All Appointments</div>
+                    <div style={{ fontSize:'20px', fontWeight:700, color:'#fff', fontFamily:"'Lora',serif", display:'flex', alignItems:'center', gap:8 }}><Calendar size={20}/>All Appointments</div>
                     <div style={{ fontSize:'11px', color:'rgba(255,255,255,.55)', marginTop:'2px' }}>{appts.length} total appointments</div>
                 </div>
             </div>
@@ -186,7 +187,7 @@ export function AdminAppointments() {
             <div style={{ flex:1, overflowY:'auto', padding:'20px 28px' }}>
                 <div style={{ display:'flex', gap:'10px', marginBottom:'14px', flexWrap:'wrap' }}>
                     <input value={search} onChange={e => setSearch(e.target.value)}
-                           placeholder="🔍  Search..."
+                           placeholder="Search..."
                            style={{ ...inp, maxWidth:'280px', boxShadow:'0 1px 3px rgba(0,0,0,.04)' }}/>
                     {['ALL','BOOKED','CONFIRMED','COMPLETED','CANCELLED'].map(f => (
                         <button key={f} onClick={() => setFilter(f)} style={{
@@ -227,8 +228,8 @@ export function AdminAppointments() {
                                             <div style={{ fontSize:'12px', fontWeight:600, color:'#0f172a' }}>
                                                 {dt.toLocaleDateString('en-IN',{ day:'numeric', month:'short', year:'numeric' })}
                                             </div>
-                                            <div style={{ fontSize:'10px', color:'#2563eb' }}>
-                                                🕐 {dt.toLocaleTimeString('en-IN',{ hour:'2-digit', minute:'2-digit' })}
+                                            <div style={{ fontSize:'10px', color:'#2563eb', display:'flex', alignItems:'center', gap:3 }}>
+                                                <Clock size={10}/>{dt.toLocaleTimeString('en-IN',{ hour:'2-digit', minute:'2-digit' })}
                                             </div>
                                         </>
                                     ) : '—'}
@@ -289,7 +290,7 @@ export function AdminDepartments() {
             <div style={HERO_STYLE}>
                 <div>
                     <div style={{ fontSize:'10px', color:'rgba(255,255,255,.5)', fontWeight:600, letterSpacing:'.08em', textTransform:'uppercase', marginBottom:'3px' }}>Management</div>
-                    <div style={{ fontSize:'20px', fontWeight:700, color:'#fff', fontFamily:"'Lora',serif" }}>🏥 Departments</div>
+                    <div style={{ fontSize:'20px', fontWeight:700, color:'#fff', fontFamily:"'Lora',serif", display:'flex', alignItems:'center', gap:8 }}><Building2 size={20}/>Departments</div>
                     <div style={{ fontSize:'11px', color:'rgba(255,255,255,.55)', marginTop:'2px' }}>{depts.length} departments</div>
                 </div>
                 <button onClick={() => { setModal(true); setForm({ name:'' }); setError(''); }}
@@ -300,7 +301,7 @@ export function AdminDepartments() {
 
             <div style={{ flex:1, overflowY:'auto', padding:'20px 28px' }}>
                 {success && (
-                    <div style={{ background:'#f0fdf4', border:'1px solid #bbf7d0', color:'#166534', fontSize:'12px', borderRadius:'9px', padding:'10px 14px', marginBottom:'14px' }}>✅ {success}</div>
+                    <div style={{ background:'#f0fdf4', border:'1px solid #bbf7d0', color:'#166534', fontSize:'12px', borderRadius:'9px', padding:'10px 14px', marginBottom:'14px', display:'flex', alignItems:'center', gap:6 }}><CheckCircle2 size={14}/>{success}</div>
                 )}
 
                 {loading ? (
@@ -309,7 +310,7 @@ export function AdminDepartments() {
                     <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'14px', animation:'fadeUp .3s ease' }}>
                         {depts.map((d, idx) => (
                             <div key={d.id} style={{ background:'#fff', borderRadius:'16px', border:'1px solid #e8edf2', padding:'20px', boxShadow:'0 1px 4px rgba(0,0,0,.04)' }}>
-                                <div style={{ width:'48px', height:'48px', borderRadius:'14px', background:bgC[idx%bgC.length], display:'flex', alignItems:'center', justifyContent:'center', fontSize:'24px', marginBottom:'12px' }}>🏥</div>
+                                <div style={{ width:'48px', height:'48px', borderRadius:'14px', background:bgC[idx%bgC.length], display:'flex', alignItems:'center', justifyContent:'center', marginBottom:'12px', color:txC[idx%txC.length] }}><Building2 size={22}/></div>
                                 <div style={{ fontSize:'15px', fontWeight:700, color:'#0f172a', marginBottom:'4px' }}>{d.name}</div>
                                 <div style={{ fontSize:'11px', color:'#94a3b8', marginBottom:'10px' }}>
                                     Head: {d.headDoctorName || '—'}
@@ -332,14 +333,14 @@ export function AdminDepartments() {
             {modal && (
                 <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.5)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:1000, backdropFilter:'blur(4px)' }}>
                     <div style={{ background:'#fff', borderRadius:'20px', padding:'28px', width:'380px', boxShadow:'0 20px 60px rgba(0,0,0,.2)', animation:'modalIn .2s ease' }}>
-                        <div style={{ fontSize:'18px', fontWeight:700, color:'#0f172a', marginBottom:'16px', fontFamily:"'Lora',serif" }}>🏥 Add Department</div>
-                        {error && <div style={{ background:'#fef2f2', border:'1px solid #fecaca', color:'#dc2626', fontSize:'12px', borderRadius:'8px', padding:'10px', marginBottom:'12px' }}>⚠️ {error}</div>}
+                        <div style={{ fontSize:'18px', fontWeight:700, color:'#0f172a', marginBottom:'16px', fontFamily:"'Lora',serif", display:'flex', alignItems:'center', gap:8 }}><Building2 size={18} color='#2563eb'/>Add Department</div>
+                        {error && <div style={{ background:'#fef2f2', border:'1px solid #fecaca', color:'#dc2626', fontSize:'12px', borderRadius:'8px', padding:'10px', marginBottom:'12px', display:'flex', alignItems:'center', gap:6 }}><AlertCircle size={13}/>{error}</div>}
                         <label style={lbl}>Department Name *</label>
                         <input style={{ ...inp, marginBottom:'16px' }} placeholder="e.g. Cardiology"
                                value={form.name} onChange={e => setForm({ name:e.target.value })}/>
                         <div style={{ display:'flex', gap:'8px' }}>
                             <button onClick={handleCreate} disabled={saving} style={{ flex:1, padding:'11px', borderRadius:'10px', border:'none', background:'linear-gradient(135deg,#2563eb,#1d4ed8)', color:'#fff', fontSize:'13px', fontWeight:700, cursor:'pointer' }}>
-                                {saving ? 'Creating...' : '✓ Create'}
+                                {saving ? 'Creating...' : 'Create'}
                             </button>
                             <button onClick={() => setModal(false)} style={{ padding:'11px 20px', borderRadius:'10px', border:'1px solid #e2e8f0', background:'#fff', color:'#374151', fontSize:'13px', cursor:'pointer' }}>
                                 Cancel
@@ -421,7 +422,7 @@ export function AdminMedicines() {
             <div style={HERO_STYLE}>
                 <div>
                     <div style={{ fontSize:'10px', color:'rgba(255,255,255,.5)', fontWeight:600, letterSpacing:'.08em', textTransform:'uppercase', marginBottom:'3px' }}>Management</div>
-                    <div style={{ fontSize:'20px', fontWeight:700, color:'#fff', fontFamily:"'Lora',serif" }}>💊 Medicines</div>
+                    <div style={{ fontSize:'20px', fontWeight:700, color:'#fff', fontFamily:"'Lora',serif", display:'flex', alignItems:'center', gap:8 }}><Pill size={20}/>Medicines</div>
                     <div style={{ fontSize:'11px', color:'rgba(255,255,255,.55)', marginTop:'2px' }}>{meds.length} in inventory</div>
                 </div>
                 <button onClick={() => { setModal('add'); setForm({ name:'', type:'TABLET', price:'', stock:'', dosage:'', manufacturer:'' }); setError(''); }}
@@ -431,11 +432,11 @@ export function AdminMedicines() {
             </div>
 
             <div style={{ flex:1, overflowY:'auto', padding:'20px 28px' }}>
-                {success && <div style={{ background:'#f0fdf4', border:'1px solid #bbf7d0', color:'#166534', fontSize:'12px', borderRadius:'9px', padding:'10px 14px', marginBottom:'14px' }}>✅ {success}</div>}
-                {error && !modal && !restock && <div style={{ background:'#fef2f2', border:'1px solid #fecaca', color:'#dc2626', fontSize:'12px', borderRadius:'9px', padding:'10px 14px', marginBottom:'14px' }}>⚠️ {error}</div>}
+                {success && <div style={{ background:'#f0fdf4', border:'1px solid #bbf7d0', color:'#166534', fontSize:'12px', borderRadius:'9px', padding:'10px 14px', marginBottom:'14px', display:'flex', alignItems:'center', gap:6 }}><CheckCircle2 size={14}/>{success}</div>}
+                {error && !modal && !restock && <div style={{ background:'#fef2f2', border:'1px solid #fecaca', color:'#dc2626', fontSize:'12px', borderRadius:'9px', padding:'10px 14px', marginBottom:'14px', display:'flex', alignItems:'center', gap:6 }}><AlertCircle size={14}/>{error}</div>}
 
                 <input value={search} onChange={e => setSearch(e.target.value)}
-                       placeholder="🔍  Search medicines..."
+                       placeholder="Search medicines..."
                        style={{ ...inp, maxWidth:'380px', boxShadow:'0 1px 3px rgba(0,0,0,.04)', marginBottom:'16px' }}/>
 
                 <div style={{ background:'#fff', borderRadius:'16px', border:'1px solid #e8edf2', overflow:'hidden', animation:'fadeUp .3s ease' }}>
@@ -467,9 +468,9 @@ export function AdminMedicines() {
                                     {m.lowStock ? 'Low' : 'OK'}
                                 </span>
                                 <div style={{ display:'flex', gap:'4px' }}>
-                                    <button onClick={() => { setModal(m); setForm({...m}); setError(''); }} style={{ padding:'4px 8px', borderRadius:'6px', border:'none', background:'#eff6ff', color:'#2563eb', fontSize:'10px', fontWeight:600, cursor:'pointer' }}>✏️</button>
-                                    <button onClick={() => { setRestock(m); setRestockQty(10); }} style={{ padding:'4px 8px', borderRadius:'6px', border:'none', background:'#f0fdf4', color:'#15803d', fontSize:'10px', fontWeight:600, cursor:'pointer' }}>📦</button>
-                                    <button onClick={() => handleDelete(m.id)} style={{ padding:'4px 8px', borderRadius:'6px', border:'none', background:'#fef2f2', color:'#dc2626', fontSize:'10px', fontWeight:600, cursor:'pointer' }}>🗑️</button>
+                                    <button onClick={() => { setModal(m); setForm({...m}); setError(''); }} style={{ padding:'4px 8px', borderRadius:'6px', border:'none', background:'#eff6ff', color:'#2563eb', fontSize:'10px', fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:3 }}><Pencil size={11}/>Edit</button>
+                                    <button onClick={() => { setRestock(m); setRestockQty(10); }} style={{ padding:'4px 8px', borderRadius:'6px', border:'none', background:'#f0fdf4', color:'#15803d', fontSize:'10px', fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:3 }}><PackagePlus size={11}/>Stock</button>
+                                    <button onClick={() => handleDelete(m.id)} style={{ padding:'4px 8px', borderRadius:'6px', border:'none', background:'#fef2f2', color:'#dc2626', fontSize:'10px', fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:3 }}><Trash2 size={11}/></button>
                                 </div>
                             </div>
                         );
@@ -483,11 +484,11 @@ export function AdminMedicines() {
                     <div style={{ background:'#fff', borderRadius:'20px', padding:'28px', width:'460px', boxShadow:'0 20px 60px rgba(0,0,0,.2)', animation:'modalIn .2s ease' }}>
                         <div style={{ display:'flex', justifyContent:'space-between', marginBottom:'20px' }}>
                             <div style={{ fontSize:'18px', fontWeight:700, color:'#0f172a', fontFamily:"'Lora',serif" }}>
-                                {modal === 'add' ? '💊 Add Medicine' : '✏️ Edit Medicine'}
+                                {modal === 'add' ? 'Add Medicine' : 'Edit Medicine'}
                             </div>
                             <button onClick={() => setModal(null)} style={{ width:'30px', height:'30px', borderRadius:'8px', border:'none', background:'#f1f5f9', color:'#64748b', fontSize:'16px', cursor:'pointer' }}>×</button>
                         </div>
-                        {error && <div style={{ background:'#fef2f2', border:'1px solid #fecaca', color:'#dc2626', fontSize:'12px', borderRadius:'8px', padding:'10px', marginBottom:'12px' }}>⚠️ {error}</div>}
+                        {error && <div style={{ background:'#fef2f2', border:'1px solid #fecaca', color:'#dc2626', fontSize:'12px', borderRadius:'8px', padding:'10px', marginBottom:'12px', display:'flex', alignItems:'center', gap:6 }}><AlertCircle size={13}/>{error}</div>}
                         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'12px' }}>
                             {[
                                 ['name','Name *','text','Paracetamol'],

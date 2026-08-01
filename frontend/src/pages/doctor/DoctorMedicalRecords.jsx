@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
+import { ClipboardList, Search, Loader2, Pill } from 'lucide-react';
 
 export default function DoctorMedicalRecords() {
     const navigate = useNavigate();
@@ -37,7 +38,7 @@ export default function DoctorMedicalRecords() {
                 <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
                     <div>
                         <div style={{ fontSize:'10px', color:'rgba(255,255,255,.5)', fontWeight:600, letterSpacing:'.08em', textTransform:'uppercase', marginBottom:'4px' }}>Patient Care</div>
-                        <div style={{ fontSize:'20px', fontWeight:700, color:'#fff', fontFamily:"'Playfair Display',serif" }}>📋 Medical Records</div>
+                        <div style={{ fontSize:'20px', fontWeight:700, color:'#fff', fontFamily:"'Playfair Display',serif", display:'flex', alignItems:'center', gap:8 }}><ClipboardList size={20}/>Medical Records</div>
                         <div style={{ fontSize:'11px', color:'rgba(255,255,255,.55)', marginTop:'3px' }}>
                             {loading ? 'Loading...' : `${records.length} records created`}
                         </div>
@@ -51,7 +52,7 @@ export default function DoctorMedicalRecords() {
 
             <div style={{ flex:1, overflowY:'auto', padding:'20px 28px' }}>
                 <input value={search} onChange={e => setSearch(e.target.value)}
-                       placeholder="🔍  Search by patient name or diagnosis..."
+                       placeholder="Search by patient name or diagnosis..."
                        style={{ width:'100%', maxWidth:'420px', border:'1px solid #e2e8f0', borderRadius:'10px', padding:'10px 14px', fontSize:'12px', background:'#fff', boxSizing:'border-box', marginBottom:'16px', outline:'none' }}
                 />
 
@@ -59,7 +60,7 @@ export default function DoctorMedicalRecords() {
                     <div style={{ padding:'60px', textAlign:'center', color:'#94a3b8' }}>Loading records...</div>
                 ) : filtered.length === 0 ? (
                     <div style={{ background:'#fff', borderRadius:'16px', border:'1px solid #e8edf2', padding:'70px 20px', textAlign:'center' }}>
-                        <div style={{ fontSize:'44px', marginBottom:'12px' }}>📋</div>
+                        <ClipboardList size={40} color="#e2e8f0" style={{ marginBottom:12, display:'block', margin:'0 auto 12px' }}/>
                         <div style={{ fontSize:'15px', fontWeight:700, color:'#374151', marginBottom:'6px' }}>
                             {search ? `No results for "${search}"` : 'No medical records yet'}
                         </div>
@@ -103,8 +104,8 @@ export default function DoctorMedicalRecords() {
 
                                     <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
                                         {rec.prescriptionId ? (
-                                            <span style={{ background:'#EFF6FF', color:'#185FA5', padding:'3px 9px', borderRadius:'20px', fontSize:'10px', fontWeight:600 }}>
-                                                💊 Rx #{rec.prescriptionId}
+                                            <span style={{ background:'#EFF6FF', color:'#185FA5', padding:'3px 9px', borderRadius:'20px', fontSize:'10px', fontWeight:600, display:'inline-flex', alignItems:'center', gap:4 }}>
+                                                <Pill size={10}/> Rx #{rec.prescriptionId}
                                             </span>
                                         ) : (
                                             <span style={{ fontSize:'10px', color:'#94a3b8' }}>No prescription</span>

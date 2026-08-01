@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Pill, Search, Building, Loader2 } from 'lucide-react';
 import api from '../../api/axios';
 
 export default function DoctorMedicines() {
@@ -62,7 +63,7 @@ export default function DoctorMedicines() {
                 <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', position:'relative' }}>
                     <div>
                         <div style={{ fontSize:'10px', color:'rgba(255,255,255,.5)', fontWeight:600, letterSpacing:'.08em', textTransform:'uppercase', marginBottom:'4px' }}>My Account</div>
-                        <div style={{ fontSize:'20px', fontWeight:700, color:'#fff', fontFamily:"'Playfair Display',serif" }}>💊 Medicines</div>
+                        <div style={{ fontSize:'20px', fontWeight:700, color:'#fff', fontFamily:"'Playfair Display',serif", display:'flex', alignItems:'center', gap:8 }}><Pill size={20}/>Medicines</div>
                         <div style={{ fontSize:'11px', color:'rgba(255,255,255,.55)', marginTop:'3px' }}>
                             {loading ? 'Loading...' : `${medicines.length} medicines available in hospital`}
                         </div>
@@ -122,12 +123,12 @@ export default function DoctorMedicines() {
                 {/* Grid */}
                 {loading ? (
                     <div style={{ padding:'60px', textAlign:'center', color:'#94a3b8', fontSize:'13px' }}>
-                        <div style={{ fontSize:'32px', marginBottom:'10px' }}>💊</div>
+                        <Pill size={30} color="#e2e8f0" style={{ marginBottom:10, display:'block', margin:'0 auto 10px' }}/>
                         Loading medicines...
                     </div>
                 ) : filtered.length === 0 ? (
                     <div style={{ background:'#fff', borderRadius:'16px', border:'1px solid #e8edf2', padding:'60px 20px', textAlign:'center' }}>
-                        <div style={{ fontSize:'40px', marginBottom:'10px' }}>🔍</div>
+                        <Pill size={38} color="#e2e8f0" style={{ marginBottom:10, display:'block', margin:'0 auto 10px' }}/>
                         <div style={{ fontSize:'14px', fontWeight:700, color:'#374151', marginBottom:'5px' }}>
                             {search ? `No results for "${search}"` : 'No medicines found'}
                         </div>
@@ -147,7 +148,7 @@ export default function DoctorMedicines() {
                                 }}>
                                     {/* top */}
                                     <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'12px' }}>
-                                        <div style={{ width:'42px', height:'42px', borderRadius:'12px', background:ts.bg, display:'flex', alignItems:'center', justifyContent:'center', fontSize:'22px' }}>💊</div>
+                                        <div style={{ width:'42px', height:'42px', borderRadius:'12px', background:ts.bg, display:'flex', alignItems:'center', justifyContent:'center', color:ts.color }}><Pill size={20}/></div>
                                         <span style={{ background:ts.bg, color:ts.color, padding:'3px 10px', borderRadius:'20px', fontSize:'10px', fontWeight:700 }}>
                                             {med.type || 'OTHER'}
                                         </span>
@@ -158,7 +159,7 @@ export default function DoctorMedicines() {
                                         {med.name}
                                     </div>
                                     {med.manufacturer && (
-                                        <div style={{ fontSize:'11px', color:'#94a3b8', marginBottom:'10px' }}>🏭 {med.manufacturer}</div>
+                                        <div style={{ fontSize:'11px', color:'#94a3b8', marginBottom:'10px', display:'flex', alignItems:'center', gap:4 }}><Building size={11}/> {med.manufacturer}</div>
                                     )}
 
                                     {/* details */}
