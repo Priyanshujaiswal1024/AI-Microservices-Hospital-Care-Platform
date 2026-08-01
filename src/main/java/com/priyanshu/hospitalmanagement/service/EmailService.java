@@ -30,6 +30,7 @@ public class EmailService {
     // 1. OTP EMAIL
     // ─────────────────────────────────────────────────────────────────────────
     public void sendOtp(String toEmail, String otp) {
+        log.info("🔐 Generated OTP for [{}]: {}", toEmail, otp);
         Context context = new Context();
         context.setVariable("otp", otp);
 
@@ -170,9 +171,9 @@ public class EmailService {
             mailSender.send(message);
             log.info("Email '{}' sent to {}", subject, toEmail);
 
-        } catch (MessagingException e) {
-            log.error("Failed to send email '{}' to {}", subject, toEmail, e);
-            throw new RuntimeException("Failed to send email: " + subject, e);
+        } catch (Exception e) {
+            log.error("Failed to send email '{}' to {}: {}", subject, toEmail, e.getMessage());
+            // Do not re-throw exception so signup and appointment operations continue gracefully even if SMTP times out
         }
     }
 
