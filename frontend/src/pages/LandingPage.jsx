@@ -84,11 +84,9 @@ function friendlySignupError(err) {
         if (raw) return { field: null, msg: raw, action: null };
     }
     if (status >= 500) {
-        if (isPhone) return { field: 'phone',    msg: 'This phone number may already be registered.', action: { label: 'Try signing in', type: 'login' } };
-        if (isEmail) return { field: 'username', msg: 'This email may already be registered.',        action: { label: 'Try signing in', type: 'login' } };
-        return { field: null, msg: 'This email or phone number may already be registered.', action: { label: 'Try signing in instead', type: 'login' } };
+        return { field: null, msg: raw || 'Server temporary issue. Please try again.', action: null };
     }
-    return { field: null, msg: raw || 'Registration failed. Please try again or sign in if you already have an account.', action: { label: 'Sign in instead', type: 'login' } };
+    return { field: null, msg: raw || 'Registration failed. Please try again.', action: { label: 'Sign in instead', type: 'login' } };
 }
 
 function friendlyLoginError(err) {

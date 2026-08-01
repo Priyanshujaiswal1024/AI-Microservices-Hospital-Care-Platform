@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
@@ -19,7 +22,11 @@ public class OtpService {
     private static final String       PREFIX  = "otp:";
     private static final SecureRandom RANDOM  = new SecureRandom();
 
-    // ✅ Atomic GET + DELETE via Lua — prevents double-use race condition
+    // In-memory fallback map if Redis connection fails
+    private final Map<String, OtpEntry> memoryFallbackMap = new ConcurrentHashMap<>();
+
+    private record OtpEntry(String code, Instant expiresAt) {}
+
     private static final DefaultRedisScript<Long> VERIFY_AND_DELETE_SCRIPT =
             new DefaultRedisScript<>("""
                 local stored = redis.call('GET', KEYS[1])
@@ -34,31 +41,54 @@ public class OtpService {
 
     public String generateAndSaveOtp(String key) {
         String otp = String.format("%06d", RANDOM.nextInt(1_000_000));
+        
+        // Save in-memory fallback first
+        memoryFallbackMap.put(key, new OtpEntry(otp, Instant.now().plus(OTP_TTL)));
+
         try {
             redisTemplate.opsForValue().set(PREFIX + key, otp, OTP_TTL);
+            log.info("Saved OTP to Redis for [{}]", key);
         } catch (Exception e) {
-            log.error("Redis write failed for OTP [{}]: {}", key, e.getMessage());
-            throw new RuntimeException("OTP service temporarily unavailable. Please try again.");
+            log.warn("Redis write failed for OTP [{}], using memory fallback: {}", key, e.getMessage());
         }
         return otp;
     }
-//s
+
     public boolean verifyAndDelete(String key, String otp) {
         if (otp == null) return false;
+        
+        // 1. Try Redis first
         try {
             Long result = redisTemplate.execute(
                     VERIFY_AND_DELETE_SCRIPT,
                     List.of(PREFIX + key),
                     otp
             );
-            return Long.valueOf(1L).equals(result);
+            if (Long.valueOf(1L).equals(result)) {
+                memoryFallbackMap.remove(key);
+                return true;
+            }
         } catch (Exception e) {
-            log.error("Redis verify failed for OTP [{}]: {}", key, e.getMessage());
-            throw new RuntimeException("OTP verification temporarily unavailable. Please try again.");
+            log.warn("Redis verify failed for OTP [{}], checking memory fallback: {}", key, e.getMessage());
         }
+
+        // 2. Fallback to in-memory store if Redis failed or missed
+        OtpEntry entry = memoryFallbackMap.get(key);
+        if (entry != null) {
+            if (Instant.now().isBefore(entry.expiresAt()) && entry.code().equals(otp)) {
+                memoryFallbackMap.remove(key);
+                return true;
+            }
+            if (Instant.now().isAfter(entry.expiresAt())) {
+                memoryFallbackMap.remove(key);
+            }
+        }
+
+        return false;
     }
 
     public void deleteOtp(String key) {
+        memoryFallbackMap.remove(key);
         try {
             redisTemplate.delete(PREFIX + key);
         } catch (Exception e) {
