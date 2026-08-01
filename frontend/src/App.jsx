@@ -61,7 +61,8 @@ function RoleRedirect() {
 
 export default function App() {
   useEffect(() => {
-    fetch("https://hospital-management-0rx3.onrender.com/api/v1")
+    const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://hospital-management-0rx3.onrender.com/api/v1';
+    fetch(`${baseUrl}/actuator/health`)
         .then(() => console.log("Backend warmed up"))
         .catch(() => console.log("Backend starting..."));
   }, []);
