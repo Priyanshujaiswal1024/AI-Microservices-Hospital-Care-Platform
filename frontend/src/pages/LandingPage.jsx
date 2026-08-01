@@ -1,25 +1,34 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
 import api from '../api/axios.js';
+import { 
+    Heart, Brain, Activity, Eye, Baby, Sparkles, Award, Clock, Monitor, 
+    Pill, Smile, UserCheck, ShieldCheck, Check, AlertTriangle, Search, 
+    Lock, Phone, Mail, User, Calendar, ChevronRight, Star, X, Menu, 
+    MapPin, Stethoscope, Siren, CheckCircle2, RotateCcw, Building2, FileText, ArrowRight 
+} from 'lucide-react';
 
 /* ══════════════════════════════════════════════════════
-   P LOGO — Option 1 (Dark green square, serif P teal)
+   P LOGO — Stylized Production Badge
 ══════════════════════════════════════════════════════ */
 function PLogo({ size = 36, radius = 9 }) {
     return (
         <div style={{
-            width: size, height: size, background: '#0a4f3a',
+            width: size, height: size,
+            background: 'linear-gradient(135deg, #0d9488 0%, #0f172a 100%)',
             borderRadius: radius, display: 'flex', alignItems: 'center',
             justifyContent: 'center', flexShrink: 0, overflow: 'hidden',
+            boxShadow: '0 4px 12px rgba(13, 148, 136, 0.25)',
+            border: '1px solid rgba(255,255,255,0.2)',
+            color: '#ffffff', fontWeight: 800, fontSize: size * 0.52,
+            fontFamily: "'Inter', system-ui, sans-serif"
         }}>
-            <svg width={size * 0.65} height={size * 0.75} viewBox="0 0 26 30" xmlns="http://www.w3.org/2000/svg">
-                <text x="2" y="26" fontFamily="Georgia,serif" fontSize="30" fontWeight="700" fill="#5DCAA5">P</text>
-            </svg>
+            P
         </div>
     );
 }
+
 
 /* ══════════════════════════════════════════════════════
    ERROR HELPERS
@@ -602,28 +611,28 @@ export default function LandingPage() {
     function handleSwitchToSignup() { setLoginPrefillEmail(''); setModal('signup'); }
 
     const departments = [
-        { icon: '❤️',  name: 'Cardiology',      desc: 'Heart & cardiovascular care'  },
-        { icon: '🧠',  name: 'Neurology',        desc: 'Brain & nervous system'       },
-        { icon: '🦴',  name: 'Orthopedics',      desc: 'Bone, joint & muscle care'    },
-        { icon: '👁️', name: 'Ophthalmology',    desc: 'Eye care & vision'            },
-        { icon: '🫁',  name: 'Pulmonology',      desc: 'Lung & respiratory care'      },
-        { icon: '🩺',  name: 'General Medicine', desc: 'Primary healthcare'           },
-        { icon: '👶',  name: 'Pediatrics',       desc: "Children's health"            },
-        { icon: '🦷',  name: 'Dentistry',        desc: 'Oral & dental care'           },
+        { icon: Heart,       name: 'Cardiology',      desc: 'Heart & cardiovascular care', color: '#ef4444', bg: '#fef2f2' },
+        { icon: Brain,       name: 'Neurology',        desc: 'Brain & nervous system',      color: '#3b82f6', bg: '#eff6ff' },
+        { icon: Activity,    name: 'Orthopedics',      desc: 'Bone, joint & muscle care',   color: '#8b5cf6', bg: '#f5f3ff' },
+        { icon: Eye,         name: 'Ophthalmology',    desc: 'Eye care & vision',           color: '#f97316', bg: '#fff7ed' },
+        { icon: Stethoscope, name: 'General Medicine', desc: 'Primary healthcare',          color: '#0d9488', bg: '#f0fdf4' },
+        { icon: Baby,        name: 'Pediatrics',       desc: "Children's health",           color: '#ec4899', bg: '#fdf2f8' },
+        { icon: Sparkles,    name: 'Dentistry',        desc: 'Oral & dental care',          color: '#06b6d4', bg: '#ecfeff' },
+        { icon: ShieldCheck, name: 'Pulmonology',      desc: 'Lung & respiratory care',     color: '#10b981', bg: '#ecfdf5' },
     ];
 
     const doctors = [
-        { name: 'Dr. Arun Kapoor',  spec: 'Cardiology',    exp: '12 yrs', quali: 'MBBS, MD - Cardiology',    color: '#0a4f3a', bg: '#f0fdf4' },
-        { name: 'Dr. Priya Mehta',  spec: 'Neurology',     exp: '9 yrs',  quali: 'MBBS, DM - Neurology',     color: '#185FA5', bg: '#EFF6FF' },
-        { name: 'Dr. Rahul Sharma', spec: 'Orthopedics',   exp: '15 yrs', quali: 'MBBS, MS - Orthopaedics',  color: '#7e22ce', bg: '#FDF4FF' },
-        { name: 'Dr. Sneha Patel',  spec: 'Ophthalmology', exp: '8 yrs',  quali: 'MBBS, MS - Ophthalmology', color: '#c2410c', bg: '#FFF7ED' },
+        { name: 'Dr. Arun Kapoor',  spec: 'Cardiology',    exp: '12 yrs', quali: 'MBBS, MD - Cardiology',    color: '#0d9488', bg: '#ccfbf1' },
+        { name: 'Dr. Priya Mehta',  spec: 'Neurology',     exp: '9 yrs',  quali: 'MBBS, DM - Neurology',     color: '#0284c7', bg: '#e0f2fe' },
+        { name: 'Dr. Rahul Sharma', spec: 'Orthopedics',   exp: '15 yrs', quali: 'MBBS, MS - Orthopaedics',  color: '#7c3aed', bg: '#ede9fe' },
+        { name: 'Dr. Sneha Patel',  spec: 'Ophthalmology', exp: '8 yrs',  quali: 'MBBS, MS - Ophthalmology', color: '#ea580c', bg: '#ffedd5' },
     ];
 
     const steps = [
-        { icon: '👤', step: '01', title: 'Create Account',   desc: 'Sign up as a patient with your email and phone number in seconds.' },
-        { icon: '🔍', step: '02', title: 'Find Your Doctor', desc: 'Browse specialists by department or search by name and specialty.'  },
-        { icon: '📅', step: '03', title: 'Book Appointment', desc: 'Choose your preferred date and time slot from available slots.'     },
-        { icon: '💊', step: '04', title: 'Get Treatment',    desc: 'Visit the doctor, receive prescriptions and medical records online.' },
+        { icon: User,     step: '01', title: 'Create Account',   desc: 'Sign up as a patient with your email and phone number in seconds.' },
+        { icon: Search,   step: '02', title: 'Find Your Doctor', desc: 'Browse specialists by department or search by name and specialty.'  },
+        { icon: Calendar, step: '03', title: 'Book Appointment', desc: 'Choose your preferred date and time slot from available slots.'     },
+        { icon: FileText, step: '04', title: 'Get Treatment',    desc: 'Visit the doctor, receive prescriptions and medical records online.' },
     ];
 
     return (
@@ -825,54 +834,66 @@ export default function LandingPage() {
                     <p style={{ fontSize:'14px', color:'#64748b', maxWidth:'480px', margin:'0 auto', lineHeight:1.7 }}>From registration to recovery — we've made it effortless.</p>
                 </div>
                 <div className="lp-steps-grid">
-                    {steps.map(s => (
-                        <div key={s.step} className="step-card"
-                             style={{ background:'#fff', borderRadius:'18px', padding:'28px 24px', border:'1px solid #e8f4ef', transition:'all .25s', cursor:'default', boxShadow:'0 2px 12px rgba(0,0,0,.04)' }}>
-                            <div className="step-num"   style={{ fontSize:'11px', fontWeight:800, color:'#d1fae5', letterSpacing:'.1em', marginBottom:'14px', transition:'color .25s' }}>{s.step}</div>
-                            <div className="step-icon"  style={{ width:'48px', height:'48px', borderRadius:'14px', background:'#f0fdf4', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'22px', marginBottom:'14px', transition:'background .25s' }}>{s.icon}</div>
-                            <div className="step-title" style={{ fontSize:'15px', fontWeight:700, color:'#0f172a', marginBottom:'8px', transition:'color .25s' }}>{s.title}</div>
-                            <div className="step-desc"  style={{ fontSize:'12px', color:'#64748b', lineHeight:1.7, transition:'color .25s' }}>{s.desc}</div>
-                        </div>
-                    ))}
+                    {steps.map(s => {
+                        const StepIcon = s.icon;
+                        return (
+                            <div key={s.step} className="step-card"
+                                 style={{ background:'#fff', borderRadius:'18px', padding:'28px 24px', border:'1px solid #e2e8f0', transition:'all .25s', cursor:'default', boxShadow:'0 2px 12px rgba(0,0,0,.03)' }}>
+                                <div className="step-num"   style={{ fontSize:'11px', fontWeight:800, color:'#0d9488', letterSpacing:'.1em', marginBottom:'14px', transition:'color .25s' }}>{s.step}</div>
+                                <div className="step-icon"  style={{ width:'48px', height:'48px', borderRadius:'14px', background:'#f0fdf4', display:'flex', alignItems:'center', justifyContent:'center', color:'#0d9488', marginBottom:'14px', transition:'background .25s' }}>
+                                    <StepIcon size={24} />
+                                </div>
+                                <div className="step-title" style={{ fontSize:'15px', fontWeight:700, color:'#0f172a', marginBottom:'8px', transition:'color .25s' }}>{s.title}</div>
+                                <div className="step-desc"  style={{ fontSize:'12px', color:'#64748b', lineHeight:1.7, transition:'color .25s' }}>{s.desc}</div>
+                            </div>
+                        );
+                    })}
                 </div>
             </section>
 
             {/* ══════ DEPARTMENTS ══════ */}
             <section id="departments" className="lp-section-pad" style={{ background:'#fff' }}>
                 <div style={{ textAlign:'center', marginBottom:'56px' }}>
-                    <div style={{ fontSize:'12px', fontWeight:700, color:'#5DCAA5', textTransform:'uppercase', letterSpacing:'.1em', marginBottom:'10px' }}>Our Specialties</div>
-                    <h2 style={{ fontSize:'clamp(24px,4vw,36px)', fontWeight:800, color:'#0a4f3a', fontFamily:"'Playfair Display',serif", marginBottom:'12px' }}>World-Class Departments</h2>
+                    <div style={{ fontSize:'12px', fontWeight:700, color:'#0d9488', textTransform:'uppercase', letterSpacing:'.1em', marginBottom:'10px' }}>Our Specialties</div>
+                    <h2 style={{ fontSize:'clamp(24px,4vw,36px)', fontWeight:800, color:'#0f172a', marginBottom:'12px' }}>World-Class Departments</h2>
                     <p style={{ fontSize:'14px', color:'#64748b', maxWidth:'480px', margin:'0 auto', lineHeight:1.7 }}>Comprehensive care across all major medical specialties under one roof.</p>
                 </div>
                 <div className="lp-dept-grid">
-                    {departments.map(d => (
-                        <div key={d.name} className="dept-card"
-                             style={{ border:'1.5px solid #e8f4ef', borderRadius:'16px', padding:'24px 20px', cursor:'pointer', transition:'all .25s', background:'#fff', boxShadow:'0 2px 8px rgba(0,0,0,.04)' }}>
-                            <div style={{ fontSize:'28px', marginBottom:'12px' }}>{d.icon}</div>
-                            <div style={{ fontSize:'14px', fontWeight:700, color:'#0f172a', marginBottom:'5px' }}>{d.name}</div>
-                            <div style={{ fontSize:'12px', color:'#94a3b8' }}>{d.desc}</div>
-                        </div>
-                    ))}
+                    {departments.map(d => {
+                        const DeptIcon = d.icon;
+                        return (
+                            <div key={d.name} className="dept-card"
+                                 style={{ border:'1px solid #e2e8f0', borderRadius:'16px', padding:'24px 20px', cursor:'pointer', transition:'all .25s', background:'#fff', boxShadow:'0 2px 8px rgba(0,0,0,.03)' }}>
+                                <div style={{ width: 44, height: 44, borderRadius: 12, background: d.bg, color: d.color, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
+                                    <DeptIcon size={22} />
+                                </div>
+                                <div style={{ fontSize:'15px', fontWeight:700, color:'#0f172a', marginBottom:'5px' }}>{d.name}</div>
+                                <div style={{ fontSize:'12px', color:'#64748b' }}>{d.desc}</div>
+                            </div>
+                        );
+                    })}
                 </div>
             </section>
 
             {/* ══════ DOCTORS ══════ */}
-            <section id="doctors" className="lp-section-pad" style={{ background:'#f0fdf4' }}>
+            <section id="doctors" className="lp-section-pad" style={{ background:'#f8fafc' }}>
                 <div style={{ textAlign:'center', marginBottom:'56px' }}>
-                    <div style={{ fontSize:'12px', fontWeight:700, color:'#5DCAA5', textTransform:'uppercase', letterSpacing:'.1em', marginBottom:'10px' }}>Our Team</div>
-                    <h2 style={{ fontSize:'clamp(24px,4vw,36px)', fontWeight:800, color:'#0a4f3a', fontFamily:"'Playfair Display',serif", marginBottom:'12px' }}>Meet Our Specialists</h2>
+                    <div style={{ fontSize:'12px', fontWeight:700, color:'#0d9488', textTransform:'uppercase', letterSpacing:'.1em', marginBottom:'10px' }}>Our Team</div>
+                    <h2 style={{ fontSize:'clamp(24px,4vw,36px)', fontWeight:800, color:'#0f172a', marginBottom:'12px' }}>Meet Our Specialists</h2>
                     <p style={{ fontSize:'14px', color:'#64748b', maxWidth:'480px', margin:'0 auto', lineHeight:1.7 }}>Experienced doctors dedicated to your health and well-being.</p>
                 </div>
                 <div className="lp-doc-grid">
                     {doctors.map(doc => (
                         <div key={doc.name} className="doc-card"
-                             style={{ background:'#fff', borderRadius:'18px', padding:'24px', border:'1px solid #e8f4ef', transition:'all .25s', boxShadow:'0 2px 10px rgba(0,0,0,.05)' }}>
-                            <div style={{ width:'56px', height:'56px', borderRadius:'16px', background:doc.bg, display:'flex', alignItems:'center', justifyContent:'center', fontSize:'24px', marginBottom:'14px' }}>👨‍⚕️</div>
-                            <div style={{ fontSize:'14px', fontWeight:700, color:'#0f172a', marginBottom:'3px' }}>{doc.name}</div>
-                            <div style={{ fontSize:'12px', color:doc.color, fontWeight:600, marginBottom:'6px' }}>{doc.spec}</div>
-                            <div style={{ fontSize:'11px', color:'#94a3b8', marginBottom:'12px' }}>{doc.quali}</div>
-                            <div style={{ display:'inline-flex', alignItems:'center', gap:'5px', background:doc.bg, border:`1px solid ${doc.color}22`, borderRadius:'8px', padding:'5px 10px' }}>
-                                <span style={{ fontSize:'12px' }}>⏳</span>
+                             style={{ background:'#fff', borderRadius:'18px', padding:'24px', border:'1px solid #e2e8f0', transition:'all .25s', boxShadow:'0 2px 10px rgba(0,0,0,.04)' }}>
+                            <div style={{ width:'56px', height:'56px', borderRadius:'16px', background:doc.bg, color:doc.color, display:'flex', alignItems:'center', justifyContent:'center', marginBottom:'14px' }}>
+                                <Stethoscope size={28} />
+                            </div>
+                            <div style={{ fontSize:'15px', fontWeight:700, color:'#0f172a', marginBottom:'3px' }}>{doc.name}</div>
+                            <div style={{ fontSize:'13px', color:doc.color, fontWeight:600, marginBottom:'6px' }}>{doc.spec}</div>
+                            <div style={{ fontSize:'11px', color:'#64748b', marginBottom:'12px' }}>{doc.quali}</div>
+                            <div style={{ display:'inline-flex', alignItems:'center', gap:'6px', background:doc.bg, border:`1px solid ${doc.color}33`, borderRadius:'8px', padding:'5px 10px' }}>
+                                <Clock size={13} color={doc.color} />
                                 <span style={{ fontSize:'11px', fontWeight:600, color:doc.color }}>{doc.exp} experience</span>
                             </div>
                         </div>
@@ -881,52 +902,60 @@ export default function LandingPage() {
                 <div style={{ textAlign:'center', marginTop:'40px' }}>
                     <p style={{ fontSize:'14px', color:'#64748b', marginBottom:'16px' }}>Sign in to see all doctors, their availability and book an appointment</p>
                     <button onClick={() => setModal('signup')}
-                            style={{ padding:'13px 32px', borderRadius:'12px', border:'none', background:'#0a4f3a', color:'#fff', fontSize:'14px', fontWeight:700, cursor:'pointer', boxShadow:'0 4px 14px rgba(10,79,58,.25)' }}>
-                        📅 Create Account to Book
+                            style={{ padding:'13px 32px', borderRadius:'12px', border:'none', background:'linear-gradient(135deg, #0d9488 0%, #0f172a 100%)', color:'#fff', fontSize:'14px', fontWeight:700, cursor:'pointer', boxShadow:'0 4px 14px rgba(13,148,136,.3)', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                        <Calendar size={16} />
+                        <span>Create Account to Book</span>
                     </button>
                 </div>
             </section>
 
             {/* ══════ ABOUT ══════ */}
-            <section id="about" className="lp-section-pad" style={{ background:'#0a4f3a', position:'relative', overflow:'hidden' }}>
+            <section id="about" className="lp-section-pad" style={{ background:'linear-gradient(145deg, #0f172a 0%, #1e293b 60%, #0f766e 100%)', position:'relative', overflow:'hidden' }}>
                 <div style={{ position:'absolute', width:'400px', height:'400px', borderRadius:'50%', background:'rgba(255,255,255,.04)', top:'-100px', right:'-80px', pointerEvents:'none' }}/>
                 <div className="lp-about-grid">
                     <div>
-                        <div style={{ fontSize:'12px', fontWeight:700, color:'#5DCAA5', textTransform:'uppercase', letterSpacing:'.1em', marginBottom:'12px' }}>Why Choose Us</div>
-                        <h2 style={{ fontSize:'clamp(24px,4vw,36px)', fontWeight:800, color:'#fff', fontFamily:"'Playfair Display',serif", lineHeight:1.2, marginBottom:'20px' }}>
-                            Healthcare You Can<br/><span style={{ color:'#5DCAA5' }}>Trust & Rely On</span>
+                        <div style={{ fontSize:'12px', fontWeight:700, color:'#2dd4bf', textTransform:'uppercase', letterSpacing:'.1em', marginBottom:'12px' }}>Why Choose Us</div>
+                        <h2 style={{ fontSize:'clamp(24px,4vw,36px)', fontWeight:800, color:'#fff', lineHeight:1.2, marginBottom:'20px' }}>
+                            Healthcare You Can<br/><span style={{ color:'#2dd4bf' }}>Trust & Rely On</span>
                         </h2>
-                        <p style={{ fontSize:'14px', color:'rgba(255,255,255,.65)', lineHeight:1.8, marginBottom:'32px' }}>
+                        <p style={{ fontSize:'14px', color:'rgba(255,255,255,.7)', lineHeight:1.8, marginBottom:'32px' }}>
                             At Priyansh Care, we combine cutting-edge medical technology with compassionate care to deliver the best health outcomes for every patient.
                         </p>
                         {[
-                            ['🏆','NABH Accredited Hospital','Nationally certified for quality & safety standards'],
-                            ['🕐','24/7 Emergency Services','Round-the-clock care for critical situations'],
-                            ['💻','Digital Health Records','All your records secure and accessible anytime'],
-                            ['💊','In-house Pharmacy','Medicines available right at the hospital'],
-                        ].map(([icon, title, desc]) => (
+                            [Award,       'NABH Accredited Hospital', 'Nationally certified for quality & safety standards'],
+                            [Clock,       '24/7 Emergency Services',  'Round-the-clock care for critical situations'],
+                            [Monitor,     'Digital Health Records',   'All your records secure and accessible anytime'],
+                            [Pill,        'In-house Pharmacy',        'Medicines available right at the hospital'],
+                        ].map(([ItemIcon, title, desc]) => (
                             <div key={title} style={{ display:'flex', gap:'14px', marginBottom:'20px', alignItems:'flex-start' }}>
-                                <div style={{ width:'40px', height:'40px', borderRadius:'10px', background:'rgba(93,202,165,.2)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'18px', flexShrink:0 }}>{icon}</div>
+                                <div style={{ width:'40px', height:'40px', borderRadius:'10px', background:'rgba(45,212,191,.15)', color: '#2dd4bf', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                                    <ItemIcon size={20} />
+                                </div>
                                 <div>
                                     <div style={{ fontSize:'13px', fontWeight:700, color:'#fff', marginBottom:'2px' }}>{title}</div>
-                                    <div style={{ fontSize:'12px', color:'rgba(255,255,255,.55)' }}>{desc}</div>
+                                    <div style={{ fontSize:'12px', color:'rgba(255,255,255,.6)' }}>{desc}</div>
                                 </div>
                             </div>
                         ))}
                     </div>
                     <div className="lp-about-stats">
                         {[
-                            { num:'99%',  label:'Patient Satisfaction', icon:'😊' },
-                            { num:'500+', label:'Specialist Doctors',   icon:'👨‍⚕️' },
-                            { num:'24/7', label:'Emergency Support',    icon:'🚨' },
-                            { num:'50K+', label:'Lives Touched',        icon:'❤️' },
-                        ].map(s => (
-                            <div key={s.label} style={{ background:'rgba(255,255,255,.08)', border:'1px solid rgba(255,255,255,.12)', borderRadius:'16px', padding:'24px 20px', textAlign:'center' }}>
-                                <div style={{ fontSize:'28px', marginBottom:'8px' }}>{s.icon}</div>
-                                <div style={{ fontSize:'clamp(22px,3vw,28px)', fontWeight:800, color:'#5DCAA5', fontFamily:"'Playfair Display',serif", marginBottom:'5px' }}>{s.num}</div>
-                                <div style={{ fontSize:'11px', color:'rgba(255,255,255,.5)', textTransform:'uppercase', letterSpacing:'.07em' }}>{s.label}</div>
-                            </div>
-                        ))}
+                            { num:'99%',  label:'Patient Satisfaction', icon: Smile },
+                            { num:'500+', label:'Specialist Doctors',   icon: UserCheck },
+                            { num:'24/7', label:'Emergency Support',    icon: Siren },
+                            { num:'50K+', label:'Lives Touched',        icon: Heart },
+                        ].map(s => {
+                            const StatIcon = s.icon;
+                            return (
+                                <div key={s.label} style={{ background:'rgba(255,255,255,.06)', border:'1px solid rgba(255,255,255,.12)', borderRadius:'16px', padding:'24px 20px', textAlign:'center' }}>
+                                    <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(45,212,191,.15)', color: '#2dd4bf', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
+                                        <StatIcon size={22} />
+                                    </div>
+                                    <div style={{ fontSize:'clamp(22px,3vw,28px)', fontWeight:800, color:'#2dd4bf', marginBottom:'5px' }}>{s.num}</div>
+                                    <div style={{ fontSize:'11px', color:'rgba(255,255,255,.6)', textTransform:'uppercase', letterSpacing:'.07em' }}>{s.label}</div>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
@@ -935,41 +964,46 @@ export default function LandingPage() {
             <section id="contact" className="lp-section-pad" style={{ background:'#fff' }}>
                 <div className="lp-contact-grid">
                     <div>
-                        <div style={{ fontSize:'12px', fontWeight:700, color:'#5DCAA5', textTransform:'uppercase', letterSpacing:'.1em', marginBottom:'10px' }}>Contact Us</div>
-                        <h2 style={{ fontSize:'clamp(24px,4vw,36px)', fontWeight:800, color:'#0a4f3a', fontFamily:"'Playfair Display',serif", marginBottom:'16px' }}>Get in Touch</h2>
+                        <div style={{ fontSize:'12px', fontWeight:700, color:'#0d9488', textTransform:'uppercase', letterSpacing:'.1em', marginBottom:'10px' }}>Contact Us</div>
+                        <h2 style={{ fontSize:'clamp(24px,4vw,36px)', fontWeight:800, color:'#0f172a', marginBottom:'16px' }}>Get in Touch</h2>
                         <p style={{ fontSize:'14px', color:'#64748b', lineHeight:1.8, marginBottom:'32px' }}>Have questions? Our team is here to help you 24/7.</p>
                         {[
-                            ['📍','Address','Sector 14, Priyansh Care Hospital, New Delhi - 110001'],
-                            ['📞','Phone',  '+91 98765 43210 / +91 11-2345-6789'],
-                            ['📧','Email',  'care@priyanshcare.com'],
-                            ['⏰','Timings','Mon–Sat: 8am–8pm | Emergency: 24/7'],
-                        ].map(([icon, label, val]) => (
+                            [MapPin, 'Address', 'Sector 14, Priyansh Care Hospital, New Delhi - 110001'],
+                            [Phone,  'Phone',   '+91 98765 43210 / +91 11-2345-6789'],
+                            [Mail,   'Email',   'care@priyanshcare.com'],
+                            [Clock,  'Timings', 'Mon–Sat: 8am–8pm | Emergency: 24/7'],
+                        ].map(([ContactIcon, label, val]) => (
                             <div key={label} style={{ display:'flex', gap:'14px', marginBottom:'20px', alignItems:'flex-start' }}>
-                                <div style={{ width:'40px', height:'40px', borderRadius:'10px', background:'#f0fdf4', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'18px', flexShrink:0 }}>{icon}</div>
+                                <div style={{ width:'40px', height:'40px', borderRadius:'10px', background:'#f0fdf4', color: '#0d9488', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                                    <ContactIcon size={20} />
+                                </div>
                                 <div>
-                                    <div style={{ fontSize:'11px', fontWeight:700, color:'#0a4f3a', textTransform:'uppercase', letterSpacing:'.06em', marginBottom:'2px' }}>{label}</div>
-                                    <div style={{ fontSize:'13px', color:'#374151' }}>{val}</div>
+                                    <div style={{ fontSize:'11px', fontWeight:700, color:'#0d9488', textTransform:'uppercase', letterSpacing:'.06em', marginBottom:'2px' }}>{label}</div>
+                                    <div style={{ fontSize:'13px', color:'#334155' }}>{val}</div>
                                 </div>
                             </div>
                         ))}
                     </div>
-                    <div style={{ background:'#f0fdf4', borderRadius:'20px', padding:'32px', border:'1px solid #d1fae5' }}>
-                        <h3 style={{ fontSize:'18px', fontWeight:700, color:'#0a4f3a', fontFamily:"'Playfair Display',serif", marginBottom:'6px' }}>Book an Appointment</h3>
+                    <div style={{ background:'#f8fafc', borderRadius:'20px', padding:'32px', border:'1px solid #e2e8f0' }}>
+                        <h3 style={{ fontSize:'18px', fontWeight:700, color:'#0f172a', marginBottom:'6px' }}>Book an Appointment</h3>
                         <p style={{ fontSize:'12px', color:'#64748b', marginBottom:'20px', lineHeight:1.6 }}>Create a free account to browse all doctors, check live availability and book your appointment online.</p>
                         {[
-                            ['✅','Choose from 500+ specialist doctors'],
-                            ['📅','See real-time available slots'],
-                            ['💊','Get digital prescriptions'],
-                            ['🧾','View bills & insurance online'],
-                        ].map(([icon, text]) => (
+                            'Choose from 500+ specialist doctors',
+                            'See real-time available slots',
+                            'Get digital prescriptions',
+                            'View bills & insurance online',
+                        ].map((text) => (
                             <div key={text} style={{ display:'flex', alignItems:'center', gap:'10px', marginBottom:'12px' }}>
-                                <span style={{ fontSize:'16px' }}>{icon}</span>
-                                <span style={{ fontSize:'13px', color:'#374151', fontWeight:500 }}>{text}</span>
+                                <CheckCircle2 size={16} color="#0d9488" style={{ flexShrink: 0 }} />
+                                <span style={{ fontSize:'13px', color:'#334155', fontWeight:500 }}>{text}</span>
                             </div>
                         ))}
                         <div style={{ display:'flex', gap:'10px', marginTop:'24px', flexWrap:'wrap' }}>
-                            <button onClick={() => setModal('signup')} style={{ flex:1, minWidth:'120px', padding:'13px', borderRadius:'11px', border:'none', background:'#0a4f3a', color:'#fff', fontSize:'13px', fontWeight:700, cursor:'pointer' }}>📅 Create Account</button>
-                            <button onClick={() => setModal('login')}  style={{ padding:'13px 20px', borderRadius:'11px', border:'1.5px solid #0a4f3a', background:'transparent', color:'#0a4f3a', fontSize:'13px', fontWeight:600, cursor:'pointer' }}>Sign In</button>
+                            <button onClick={() => setModal('signup')} style={{ flex:1, minWidth:'120px', padding:'13px', borderRadius:'11px', border:'none', background:'linear-gradient(135deg, #0d9488 0%, #0f172a 100%)', color:'#fff', fontSize:'13px', fontWeight:700, cursor:'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                                <Calendar size={15} />
+                                <span>Create Account</span>
+                            </button>
+                            <button onClick={() => setModal('login')}  style={{ padding:'13px 20px', borderRadius:'11px', border:'1.5px solid #0f172a', background:'transparent', color:'#0f172a', fontSize:'13px', fontWeight:600, cursor:'pointer' }}>Sign In</button>
                         </div>
                     </div>
                 </div>

@@ -217,16 +217,16 @@ export default function AdminProfile() {
             `}</style>
 
             {/* Hero */}
-            <div className="ap-hero" style={{ background:'linear-gradient(135deg,#1e3a8a,#2563eb)', flexShrink:0 }}>
+            <div className="ap-hero" style={{ background:'linear-gradient(135deg,#0f172a,#1e293b)', flexShrink:0 }}>
                 <div style={{ fontSize:'10px', color:'rgba(255,255,255,.5)', fontWeight:600, letterSpacing:'.08em', textTransform:'uppercase', marginBottom:'3px' }}>System</div>
-                <div style={{ fontSize:'20px', fontWeight:700, color:'#fff', fontFamily:"'Lora',serif" }}>👤 Admin Profile</div>
+                <div style={{ fontSize:'20px', fontWeight:700, color:'#fff' }}>Admin Profile</div>
                 <div style={{ fontSize:'11px', color:'rgba(255,255,255,.55)', marginTop:'2px' }}>{admins.length} administrator(s) registered</div>
             </div>
 
             <div className="ap-body" style={{ flex:1, overflowY:'auto', padding:'20px 28px' }}>
 
                 {success && (
-                    <div style={{ background:'#f0fdf4', border:'1px solid #bbf7d0', color:'#166534', fontSize:'12px', borderRadius:'9px', padding:'10px 14px', marginBottom:'14px' }}>✅ {success}</div>
+                    <div style={{ background:'#f0fdf4', border:'1px solid #bbf7d0', color:'#166534', fontSize:'12px', borderRadius:'9px', padding:'10px 14px', marginBottom:'14px' }}>{success}</div>
                 )}
 
                 <div className="ap-grid" style={{ animation:'fadeUp .3s ease' }}>
@@ -235,17 +235,17 @@ export default function AdminProfile() {
                     <div style={{ background:'#fff', borderRadius:'16px', border:'1px solid #e8edf2', boxShadow:'0 1px 6px rgba(0,0,0,.04)', overflow:'hidden' }}>
 
                         {/* Card Hero */}
-                        <div style={{ background:'linear-gradient(135deg,#1e3a8a,#2563eb)', padding:'24px', position:'relative', overflow:'hidden' }}>
+                        <div style={{ background:'linear-gradient(135deg,#0f172a,#1e293b)', padding:'24px', position:'relative', overflow:'hidden' }}>
                             <div style={{ position:'absolute', right:'-20px', top:'-20px', width:'100px', height:'100px', borderRadius:'50%', background:'rgba(255,255,255,.07)', pointerEvents:'none' }}/>
                             <div style={{ display:'flex', alignItems:'center', gap:'14px', flexWrap:'wrap' }}>
-                                <div style={{ width:'56px', height:'56px', borderRadius:'14px', background:'rgba(255,255,255,.2)', color:'#fff', fontSize:'20px', fontWeight:800, display:'flex', alignItems:'center', justifyContent:'center', border:'2px solid rgba(255,255,255,.3)', flexShrink:0 }}>
+                                <div style={{ width:'56px', height:'56px', borderRadius:'14px', background:'rgba(255,255,255,.15)', color:'#fff', fontSize:'20px', fontWeight:800, display:'flex', alignItems:'center', justifyContent:'center', border:'2px solid rgba(255,255,255,.2)', flexShrink:0 }}>
                                     {initials}
                                 </div>
                                 <div style={{ minWidth:0 }}>
                                     <div style={{ fontSize:'16px', fontWeight:700, color:'#fff', marginBottom:'2px' }}>{profile?.fullName || 'Admin'}</div>
                                     <div style={{ fontSize:'11px', color:'rgba(255,255,255,.7)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{profile?.email}</div>
                                     <div style={{ marginTop:'6px' }}>
-                                        <span style={{ background:'rgba(255,255,255,.2)', padding:'2px 10px', borderRadius:'20px', fontSize:'10px', fontWeight:600, color:'#fff' }}>🔐 ADMIN</span>
+                                        <span style={{ background:'rgba(255,255,255,.2)', padding:'2px 10px', borderRadius:'20px', fontSize:'10px', fontWeight:600, color:'#fff' }}>ADMINISTRATOR</span>
                                     </div>
                                 </div>
                             </div>
@@ -253,21 +253,21 @@ export default function AdminProfile() {
 
                         {/* Details */}
                         <div style={{ padding:'20px' }}>
-                            <div style={{ fontSize:'10px', fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:'.07em', marginBottom:'14px' }}>Profile Details</div>
+                            <div style={{ fontSize:'10px', fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:'.07em', marginBottom:'14px' }}>Profile Details</div>
 
                             {loading ? (
-                                <div style={{ color:'#94a3b8', fontSize:'12px', textAlign:'center', padding:'20px' }}>Loading...</div>
+                                <div style={{ color:'#64748b', fontSize:'12px', textAlign:'center', padding:'20px' }}>Loading...</div>
                             ) : (
                                 <div className="detail-grid" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'12px' }}>
                                     {[
-                                        { label:'Email',    value: profile?.email,    icon:'📧' },
-                                        { label:'Phone',    value: profile?.phone ? `+91 ${profile.phone.replace(/^91/,'')}` : null, icon:'📞' },
-                                        { label:'Full Name',value: profile?.fullName,  icon:'👤' },
-                                        { label:'Role',     value: 'Administrator',    icon:'🔐' },
+                                        { label:'Email',    value: profile?.email },
+                                        { label:'Phone',    value: profile?.phone ? `+91 ${profile.phone.replace(/^91/,'')}` : null },
+                                        { label:'Full Name',value: profile?.fullName },
+                                        { label:'Role',     value: 'Administrator' },
                                     ].map(item => (
                                         <div key={item.label} style={{ background:'#f8fafc', borderRadius:'9px', padding:'10px 12px', border:'1px solid #f1f5f9' }}>
-                                            <div style={{ fontSize:'9px', color:'#94a3b8', marginBottom:'4px', textTransform:'uppercase', letterSpacing:'.06em', display:'flex', alignItems:'center', gap:4 }}>
-                                                <span>{item.icon}</span> {item.label}
+                                            <div style={{ fontSize:'9px', color:'#64748b', marginBottom:'4px', textTransform:'uppercase', letterSpacing:'.06em' }}>
+                                                {item.label}
                                             </div>
                                             <div style={{ fontSize:'12px', fontWeight:600, color:'#0f172a', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
                                                 {item.value || '—'}

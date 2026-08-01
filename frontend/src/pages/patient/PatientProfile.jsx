@@ -1065,7 +1065,7 @@ export default function PatientProfile() {
 
                 {/* Personal Info */}
                 <div style={{background:'#fff',borderRadius:16,border:'1px solid #e8edf2',padding:20,boxShadow:'0 1px 4px rgba(0,0,0,.04)'}}>
-                    <div style={{fontSize:10,fontWeight:700,color:'#94a3b8',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:16}}>👤 Personal Information</div>
+                    <div style={{fontSize:10,fontWeight:700,color:'#64748b',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:16}}>Personal Information</div>
                     <div className="pp-2col">
                         <Field label="Full Name"     value={profile.name}       editKey="name"       error={errors.name}    editing={editing} form={form} onChange={setField}/>
                         <Field label="Father's Name" value={profile.fatherName} editKey="fatherName"                        editing={editing} form={form} onChange={setField}/>

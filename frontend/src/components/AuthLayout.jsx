@@ -1,23 +1,25 @@
+import { Calendar, Pill, ShieldCheck, CheckCircle2, Lock, Smartphone, KeyRound, Mail, RefreshCw, Clock } from 'lucide-react';
+
 const features = {
     login: [
-        { icon: '📅', text: 'Book appointments with top specialists' },
-        { icon: '💊', text: 'View prescriptions & medical records' },
-        { icon: '🛡️', text: 'Insurance & billing management' },
+        { icon: Calendar, text: 'Book appointments with top specialists' },
+        { icon: Pill, text: 'View prescriptions & medical records' },
+        { icon: ShieldCheck, text: 'Insurance & billing management' },
     ],
     signup: [
-        { icon: '✅', text: 'OTP verified secure registration' },
-        { icon: '🔒', text: 'Your data is private & encrypted' },
-        { icon: '📱', text: 'Access anywhere, anytime' },
+        { icon: CheckCircle2, text: 'OTP verified secure registration' },
+        { icon: Lock, text: 'Your data is private & encrypted' },
+        { icon: Smartphone, text: 'Access anywhere, anytime' },
     ],
     otp: [
-        { icon: '🔐', text: 'One-time password — valid for 10 minutes' },
-        { icon: '📧', text: 'Check your spam folder if not received' },
-        { icon: '🔄', text: 'Resend OTP if it expired' },
+        { icon: KeyRound, text: 'One-time password — valid for 10 minutes' },
+        { icon: Mail, text: 'Check your spam folder if not received' },
+        { icon: RefreshCw, text: 'Resend OTP if it expired' },
     ],
     forgot: [
-        { icon: '📧', text: 'Reset link sent to your email' },
-        { icon: '⏱️', text: 'Link expires in 15 minutes' },
-        { icon: '🔒', text: 'Secure — only you can reset' },
+        { icon: Mail, text: 'Reset link sent to your email' },
+        { icon: Clock, text: 'Link expires in 15 minutes' },
+        { icon: Lock, text: 'Secure — only you can reset' },
     ],
 };
 
@@ -34,13 +36,13 @@ export default function AuthLayout({ variant = 'login', children }) {
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4"
-             style={{ background: '#e8ede9' }}>
-            <div className="flex w-full max-w-4xl rounded-2xl overflow-hidden"
-                 style={{ minHeight: '580px', boxShadow: '0 24px 60px rgba(0,0,0,.18)' }}>
+             style={{ background: '#f8fafc' }}>
+            <div className="flex w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl border border-slate-200/80"
+                 style={{ minHeight: '580px', boxShadow: '0 25px 50px -12px rgba(15, 23, 42, 0.15)' }}>
 
                 {/* ── LEFT PANEL ── */}
                 <div className="relative flex flex-col justify-between p-10 overflow-hidden"
-                     style={{ width: '52%', background: '#0a4f3a' }}>
+                     style={{ width: '52%', background: 'linear-gradient(145deg, #0f172a 0%, #1e293b 60%, #0f766e 100%)' }}>
 
                     {/* decorative circles */}
                     <div className="absolute rounded-full"
@@ -54,63 +56,63 @@ export default function AuthLayout({ variant = 'login', children }) {
                     <div className="relative z-10">
                         {/* logo */}
                         <div className="flex items-center gap-3 mb-12">
-                            <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl"
-                                 style={{ background: 'rgba(255,255,255,.15)',
+                            <div className="w-11 h-11 rounded-xl flex items-center justify-center font-black text-xl text-white shadow-lg"
+                                 style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0284c7 100%)',
                                      border: '1px solid rgba(255,255,255,.2)' }}>
-                                🏥
+                                P
                             </div>
                             <div>
-                                <div className="text-white font-semibold text-base leading-tight"
-                                     style={{ fontFamily: "'Playfair Display', serif" }}>
+                                <div className="text-white font-bold text-lg leading-tight tracking-tight">
                                     Priyansh Care
                                 </div>
-                                <div className="text-xs mt-0.5 tracking-widest uppercase"
-                                     style={{ color: 'rgba(255,255,255,.45)' }}>
-                                    Hospital
+                                <div className="text-xs mt-0.5 tracking-widest uppercase font-medium"
+                                     style={{ color: 'rgba(255,255,255,.55)' }}>
+                                    Hospital Care
                                 </div>
                             </div>
                         </div>
 
                         {/* heading */}
-                        <h1 className="text-3xl leading-tight mb-3"
-                            style={{ fontFamily: "'Playfair Display', serif", color: '#fff' }}>
+                        <h1 className="text-3xl font-bold leading-tight mb-3 text-white tracking-tight">
                             {h.line1}<br />
-                            {h.line2}<span style={{ color: '#5DCAA5' }}>{h.accent}</span>
+                            {h.line2}<span style={{ color: '#2dd4bf' }}>{h.accent}</span>
                         </h1>
                         <p className="text-sm leading-relaxed mb-8 max-w-xs"
-                           style={{ color: 'rgba(255,255,255,.6)' }}>
-                            Access your medical records, appointments, prescriptions and more — all in one place.
+                           style={{ color: 'rgba(255,255,255,.65)' }}>
+                            Access your medical records, appointments, prescriptions and more — all in one secure portal.
                         </p>
 
                         {/* features */}
-                        <div className="flex flex-col gap-3">
-                            {feats.map((f, i) => (
-                                <div key={i} className="flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0"
-                                         style={{ background: 'rgba(255,255,255,.1)',
-                                             border: '1px solid rgba(255,255,255,.15)' }}>
-                                        {f.icon}
+                        <div className="flex flex-col gap-3.5">
+                            {feats.map((f, i) => {
+                                const IconComponent = f.icon;
+                                return (
+                                    <div key={i} className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0"
+                                             style={{ background: 'rgba(255,255,255,.1)',
+                                                 border: '1px solid rgba(255,255,255,.15)', color: '#2dd4bf' }}>
+                                            <IconComponent size={16} />
+                                        </div>
+                                        <span className="text-sm font-medium"
+                                              style={{ color: 'rgba(255,255,255,.85)' }}>
+                                            {f.text}
+                                        </span>
                                     </div>
-                                    <span className="text-sm font-medium"
-                                          style={{ color: 'rgba(255,255,255,.75)' }}>
-                    {f.text}
-                  </span>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
 
                     {/* bottom trust stats */}
                     <div className="relative z-10 flex gap-6 pt-6"
-                         style={{ borderTop: '1px solid rgba(255,255,255,.1)' }}>
+                         style={{ borderTop: '1px solid rgba(255,255,255,.12)' }}>
                         {[['500+', 'Doctors'], ['50K+', 'Patients'], ['20+', 'Departments']].map(([num, lbl]) => (
                             <div key={lbl}>
-                                <div className="text-xl font-bold"
-                                     style={{ fontFamily: "'Playfair Display', serif", color: '#5DCAA5' }}>
+                                <div className="text-xl font-extrabold text-teal-300">
                                     {num}
                                 </div>
-                                <div className="text-xs mt-0.5 uppercase tracking-wider"
-                                     style={{ color: 'rgba(255,255,255,.4)' }}>
+                                <div className="text-[10px] mt-0.5 uppercase tracking-wider font-semibold"
+                                     style={{ color: 'rgba(255,255,255,.45)' }}>
                                     {lbl}
                                 </div>
                             </div>
