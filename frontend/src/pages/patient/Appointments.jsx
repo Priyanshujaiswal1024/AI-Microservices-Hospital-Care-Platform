@@ -170,8 +170,13 @@ export default function Appointments() {
                             border:'1px solid rgba(255,255,255,.3)',
                             padding:'6px 14px', borderRadius:'20px',
                             fontSize:'11px', fontWeight:700, flexShrink:0,
+                            display:'flex', alignItems:'center', gap:'4px',
                         }}>
-                            {statusConfig[nextAppt.status]?.icon} {statusConfig[nextAppt.status]?.label}
+                            {(() => {
+                                const NextIcon = statusConfig[nextAppt.status]?.icon;
+                                return NextIcon ? <NextIcon size={12} /> : null;
+                            })()}
+                            <span>{statusConfig[nextAppt.status]?.label}</span>
                         </div>
                     </div>
                 )}
