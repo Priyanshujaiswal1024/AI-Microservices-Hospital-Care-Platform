@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './auth/AuthContext';
 import { ToastProvider } from './components/ui/Toast';
 import ProtectedRoute from './components/ProtectedRoute';
-import RoleQuickSwitcher from './components/RoleQuickSwitcher';
+
 
 // Public & Auth
 import LandingPage from './pages/LandingPage';
@@ -61,8 +61,7 @@ export default function App() {
     <AuthProvider>
       <ToastProvider>
         <BrowserRouter>
-          {/* Top Global Role Quick-Switcher Banner */}
-          <RoleQuickSwitcher />
+
 
           <Routes>
             {/* Public / Auth */}
