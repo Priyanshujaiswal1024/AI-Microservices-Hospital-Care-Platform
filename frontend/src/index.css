@@ -23,7 +23,7 @@
 }
 
 .premium-card {
-  @apply bg-white border border-slate-200 hover:border-primary/30 rounded-2xl transition-all duration-300;
+  @apply bg-white border border-slate-200 hover:border-primary rounded-2xl transition-all duration-300;
   box-shadow: 0 4px 20px rgba(18, 36, 31, 0.03);
 }
 
