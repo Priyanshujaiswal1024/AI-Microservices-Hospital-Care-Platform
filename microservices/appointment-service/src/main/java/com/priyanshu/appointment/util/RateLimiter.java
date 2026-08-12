@@ -2,52 +2,66 @@ package com.priyanshu.appointment.util;
 
 import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Thread-safe sliding window rate limiter for appointment booking protection.
+ * Thread-safe Token Bucket rate limiter for appointment booking protection.
+ *
+ * Algorithm: Token Bucket
+ *  - Each key (userId) gets a bucket with maxTokens capacity.
+ *  - Tokens refill continuously: 1 token every refillRateMs milliseconds.
+ *  - Each request consumes 1 token. No tokens left → request rejected.
+ *
+ * Advantage over Fixed Window Counter (previous implementation):
+ *  Fixed Window allows a boundary burst (2× traffic at window edges).
+ *  Token Bucket refills steadily — no burst possible at any point in time.
+ *  This is the algorithm used by AWS API Gateway, Stripe, and Nginx.
+ *
+ * Example: new RateLimiter(3, 100000) → 3 tokens max, 1 token per 100s → 3 req/5min
  */
 @Slf4j
 public class RateLimiter {
 
-    private final int maxRequests;
-    private final long windowMs;
-    private final ConcurrentHashMap<String, UserRateLimit> limitMap = new ConcurrentHashMap<>();
+    private final double maxTokens;
+    private final double refillRatePerMs;
+    private final ConcurrentHashMap<String, Bucket> bucketMap = new ConcurrentHashMap<>();
 
-    public RateLimiter(int maxRequests, long windowMs) {
-        this.maxRequests = maxRequests;
-        this.windowMs = windowMs;
+    /**
+     * @param maxTokens    Maximum tokens in the bucket (burst capacity).
+     * @param refillRateMs Time in milliseconds to generate ONE token.
+     *                     Formula: refillRateMs = windowMs / maxRequests
+     */
+    public RateLimiter(int maxTokens, long refillRateMs) {
+        this.maxTokens = maxTokens;
+        this.refillRatePerMs = 1.0 / refillRateMs;
     }
 
     public boolean tryAcquire(String key) {
         long now = System.currentTimeMillis();
-        UserRateLimit rateLimit = limitMap.computeIfAbsent(key, k -> new UserRateLimit(now));
+        Bucket bucket = bucketMap.computeIfAbsent(key, k -> new Bucket(maxTokens, now));
 
-        // Clean up expired window
-        if (now - rateLimit.windowStart.get() > windowMs) {
-            synchronized (rateLimit) {
-                if (now - rateLimit.windowStart.get() > windowMs) {
-                    rateLimit.windowStart.set(now);
-                    rateLimit.requestCount.set(0);
-                }
+        synchronized (bucket) {
+            long elapsed = now - bucket.lastRefillTime;
+            double tokensToAdd = elapsed * refillRatePerMs;
+            bucket.tokens = Math.min(maxTokens, bucket.tokens + tokensToAdd);
+            bucket.lastRefillTime = now;
+
+            if (bucket.tokens >= 1.0) {
+                bucket.tokens -= 1.0;
+                return true;
             }
-        }
 
-        int currentCount = rateLimit.requestCount.incrementAndGet();
-        if (currentCount > maxRequests) {
-            log.warn("[Rate Limit] Key '{}' exceeded limit! ({} requests in current window)", key, currentCount);
+            log.warn("[Token Bucket] Key '{}' throttled. Remaining tokens: {:.2f}", key, bucket.tokens);
             return false;
         }
-        return true;
     }
 
-    private static class UserRateLimit {
-        final AtomicLong windowStart;
-        final AtomicInteger requestCount = new AtomicInteger(0);
+    private static class Bucket {
+        double tokens;
+        long lastRefillTime;
 
-        UserRateLimit(long start) {
-            this.windowStart = new AtomicLong(start);
+        Bucket(double initialTokens, long now) {
+            this.tokens = initialTokens;
+            this.lastRefillTime = now;
         }
     }
 }

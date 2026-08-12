@@ -5,6 +5,8 @@ import com.priyanshu.auth.entity.User;
 import com.priyanshu.auth.entity.type.RoleType;
 import com.priyanshu.auth.repository.UserRepository;
 import com.priyanshu.auth.security.JWTService;
+import com.priyanshu.auth.util.RateLimiter;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +15,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 import java.util.Set;
@@ -34,6 +37,10 @@ public class GoogleOAuthController {
     private final JWTService jwtService;
     private final RestTemplate restTemplate;
 
+    // Token Bucket: 5 OAuth exchanges per minute per IP (prevents Google API spam)
+    // 1 token per 12s = 60000ms / 5 = 12000ms refill rate
+    private final RateLimiter oauthLimiter = new RateLimiter(5, 12000);
+
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String clientId;
 
@@ -47,8 +54,15 @@ public class GoogleOAuthController {
     @GetMapping("/google/exchange")
     public ResponseEntity<?> exchangeGoogleCode(
             @RequestParam String code,
-            @RequestParam String redirectUri
+            @RequestParam String redirectUri,
+            HttpServletRequest request
     ) {
+        // Rate limit by IP — prevents bots from hammering Google's token API
+        String clientIp = getClientIp(request);
+        if (!oauthLimiter.tryAcquire(clientIp)) {
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,
+                    "Too many OAuth attempts. Max 5 per minute.");
+        }
         try {
             // ── Step 1: Exchange code for access_token ──────────────────────
             String tokenUrl = "https://oauth2.googleapis.com/token";
@@ -123,5 +137,15 @@ public class GoogleOAuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("OAuth exchange failed: " + ex.getMessage());
         }
+    }
+
+    // ── Private Helpers ──────────────────────────────────────────────────
+
+    private String getClientIp(HttpServletRequest request) {
+        String forwarded = request.getHeader("X-Forwarded-For");
+        if (forwarded != null && !forwarded.isBlank()) {
+            return forwarded.split(",")[0].trim();
+        }
+        return request.getRemoteAddr();
     }
 }

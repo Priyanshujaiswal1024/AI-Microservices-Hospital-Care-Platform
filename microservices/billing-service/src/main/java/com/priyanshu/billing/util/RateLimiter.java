@@ -1,36 +1,30 @@
-package com.priyanshu.auth.util;
+package com.priyanshu.billing.util;
 
 import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Thread-safe Token Bucket rate limiter for brute-force and spam protection.
+ * Thread-safe Token Bucket rate limiter for billing operations.
+ * Protects CPU-heavy operations like PDF invoice generation from abuse.
  *
  * Algorithm: Token Bucket
- *  - Each key (user/email/IP) gets a bucket with maxTokens capacity.
+ *  - Each key (userId) gets a bucket with maxTokens capacity.
  *  - Tokens refill continuously: 1 token every refillRateMs milliseconds.
  *  - Each request consumes 1 token. No tokens left → request rejected.
  *
- * Advantage over Fixed Window Counter (previous implementation):
- *  Fixed Window: 5 at 11:59:59 + 5 at 12:00:00 = 10 requests in 2 seconds (boundary burst).
- *  Token Bucket: tokens refill at a steady rate → no boundary burst possible.
- *  This is the algorithm used by AWS API Gateway, Stripe, and Nginx.
- *
- * Example: new RateLimiter(5, 12000) → 5 tokens max, 1 token per 12s → 5 req/min
+ * Example: new RateLimiter(10, 6000) → 10 tokens max, 1 token per 6s → 10 req/min
  */
 @Slf4j
 public class RateLimiter {
 
     private final double maxTokens;
-    private final double refillRatePerMs; // tokens generated per millisecond
+    private final double refillRatePerMs;
     private final ConcurrentHashMap<String, Bucket> bucketMap = new ConcurrentHashMap<>();
 
     /**
      * @param maxTokens    Maximum tokens in the bucket (burst capacity).
      * @param refillRateMs Time in milliseconds to generate ONE token.
      *                     Formula: refillRateMs = windowMs / maxRequests
-     *                     e.g. 5 req/min  → refillRateMs = 60000 / 5 = 12000
-     *                     e.g. 3 req/5min → refillRateMs = 300000 / 3 = 100000
      */
     public RateLimiter(int maxTokens, long refillRateMs) {
         this.maxTokens = maxTokens;
@@ -42,7 +36,6 @@ public class RateLimiter {
         Bucket bucket = bucketMap.computeIfAbsent(key, k -> new Bucket(maxTokens, now));
 
         synchronized (bucket) {
-            // Refill: how many tokens earned since last call?
             long elapsed = now - bucket.lastRefillTime;
             double tokensToAdd = elapsed * refillRatePerMs;
             bucket.tokens = Math.min(maxTokens, bucket.tokens + tokensToAdd);
@@ -50,11 +43,11 @@ public class RateLimiter {
 
             if (bucket.tokens >= 1.0) {
                 bucket.tokens -= 1.0;
-                return true;  // request allowed
+                return true;
             }
 
             log.warn("[Token Bucket] Key '{}' throttled. Remaining tokens: {:.2f}", key, bucket.tokens);
-            return false;     // request rejected
+            return false;
         }
     }
 

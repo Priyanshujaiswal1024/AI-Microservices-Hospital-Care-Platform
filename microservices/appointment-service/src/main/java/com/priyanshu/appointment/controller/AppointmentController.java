@@ -25,8 +25,9 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
 
-    // Rate Limiter: Max 3 bookings per 5 minutes (300,000 ms) per patient
-    private final RateLimiter bookingLimiter = new RateLimiter(3, 300000);
+    // Token Bucket: max 3 bookings per 5 min per patient
+    // 1 token per 100s = 300000ms / 3 = 100000ms refill rate
+    private final RateLimiter bookingLimiter = new RateLimiter(3, 100000);
 
     /** POST /api/v1/appointments — PATIENT only */
     @PostMapping

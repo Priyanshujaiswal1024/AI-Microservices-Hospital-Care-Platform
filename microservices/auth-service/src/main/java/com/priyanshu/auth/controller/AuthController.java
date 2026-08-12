@@ -4,6 +4,7 @@ import com.priyanshu.auth.dto.*;
 import com.priyanshu.auth.entity.UserPrincipal;
 import com.priyanshu.auth.service.AuthService;
 import com.priyanshu.auth.util.RateLimiter;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,14 +20,24 @@ public class AuthController {
 
     private final AuthService authService;
 
-    // Rate Limiters: Login & OTP (5 attempts per minute), Password reset (3 attempts per 5 minutes)
-    private final RateLimiter loginLimiter = new RateLimiter(5, 60000);
-    private final RateLimiter otpLimiter = new RateLimiter(5, 60000);
-    private final RateLimiter resetLimiter = new RateLimiter(3, 300000);
+    // Token Bucket Rate Limiters (refillRateMs = windowMs / maxTokens)
+    // Login & OTP : 5 req/min  → 1 token per 12s  (60000ms / 5  = 12000ms)
+    // Reset       : 3 req/5min → 1 token per 100s (300000ms / 3 = 100000ms)
+    // Signup      : 3 req/hour → 1 token per 20min (IP-keyed, tightest limit)
+    private final RateLimiter loginLimiter  = new RateLimiter(5, 12000);
+    private final RateLimiter otpLimiter    = new RateLimiter(5, 12000);
+    private final RateLimiter resetLimiter  = new RateLimiter(3, 100000);
+    private final RateLimiter signupLimiter = new RateLimiter(3, 1200000);
 
     /** POST /api/v1/auth/signup */
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@Valid @RequestBody SignUpRequestDto dto) {
+    public ResponseEntity<String> signup(@Valid @RequestBody SignUpRequestDto dto,
+                                         HttpServletRequest request) {
+        String clientIp = getClientIp(request);
+        if (clientIp != null && !signupLimiter.tryAcquire(clientIp)) {
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,
+                    "Too many signup attempts. Max 3 per hour per IP.");
+        }
         return ResponseEntity.ok(authService.signup(dto));
     }
 
@@ -78,6 +89,20 @@ public class AuthController {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many OTP resends. Try again in 1 minute.");
         }
         return ResponseEntity.ok(authService.resendOtp(email));
+    }
+
+    // ── Private Helpers ────────────────────────────────────────────────────────
+
+    /**
+     * Extracts real client IP.
+     * Checks X-Forwarded-For first (set by load balancers like AWS ALB / Nginx).
+     */
+    private String getClientIp(HttpServletRequest request) {
+        String forwarded = request.getHeader("X-Forwarded-For");
+        if (forwarded != null && !forwarded.isBlank()) {
+            return forwarded.split(",")[0].trim();
+        }
+        return request.getRemoteAddr();
     }
 
     /** GET /api/v1/auth/validate - called by API Gateway to validate JWT */

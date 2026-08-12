@@ -46,8 +46,9 @@ public class EmailService {
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
 
-    // Rate Limiter: Max 5 emails per 1 minute (60,000 ms) per recipient email
-    private final RateLimiter emailLimiter = new RateLimiter(5, 60000);
+    // Token Bucket: max 5 emails per minute per recipient
+    // 1 token per 12s = 60000ms / 5 = 12000ms refill rate
+    private final RateLimiter emailLimiter = new RateLimiter(5, 12000);
 
     private static final DateTimeFormatter DATE_FMT =
             DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a");

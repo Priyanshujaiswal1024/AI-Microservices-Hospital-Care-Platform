@@ -22,8 +22,9 @@ public class AiChatController {
     private final AiChatService aiChatService;
     private final AiDoctorChatService aiDoctorChatService;
 
-    // Rate Limiter: Max 5 requests per 1 minute (60,000 ms) per user
-    private final RateLimiter chatRateLimiter = new RateLimiter(5, 60000);
+    // Token Bucket: max 5 AI chat requests per minute per user
+    // 1 token per 12s = 60000ms / 5 = 12000ms refill rate
+    private final RateLimiter chatRateLimiter = new RateLimiter(5, 12000);
 
     @PostMapping("/ai-chat")
     public ResponseEntity<AiChatResponse> chat(
